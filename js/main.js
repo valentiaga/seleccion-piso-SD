@@ -13,7 +13,6 @@ function init() {
         pad_numero.addEventListener('click', function (e) {
             document.querySelector('.inputSeleccion').value = e.target.innerHTML;
         });
-
     });
 
 }

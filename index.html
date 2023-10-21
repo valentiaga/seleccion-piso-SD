@@ -11,9 +11,13 @@
 		<div class="authentication-container">
 			<form action="#">
 				<h1>Autenticación</h1>
-				<span>Ingresa tu id</span>
+				<h3>Ingresa tu id</h3>
 				<input type="id" placeholder="Id" />
 				<button>Ingresar</button>
+				<br><br><br>
+				<h3>O ingresa con tu tarjeta RFID</h3>
+				<button class="rfid"></button>
+				<span>Tocá el icono y acercá tu tarjeta al lector</span>
 			</form>
 		</div>
 		<div class="floor-container">
@@ -21,32 +25,29 @@
 				<div class="right-panel">
 					<h1>Selector de pisos</h1>
 					<div class="tecladoPisos">
-						<input class="inputSeleccion" type="text" disabled>
+						<div class="seleccion">
+							<input class="inputSeleccion" type="text" disabled>
+							<div class="borrar">x</div>
+						</div>
 						<div class="pad">
-							<div class="row">
-								<div class="digit">9</div>
-								<div class="digit">8</div>
-								<div class="digit">7</div>
-							</div>
-							<div class="row">
-								<div class="digit">6</div>
-								<div class="digit">5</div>
-								<div class="digit">4</div>
-							</div>
-							<div class="row">
-								<div class="digit">3</div>
-								<div class="digit">2</div>
-								<div class="digit">1</div>
-							</div>
-							<div class="row">
-								<div class="digit">0</div>
-							</div>
+							<div class="digit">10</div>
+							<div class="digit">9</div>
+							<div class="digit">8</div>
+							<div class="digit">7</div>
+							<div class="digit">6</div>
+							<div class="digit">5</div>
+							<div class="digit">4</div>
+							<div class="digit">3</div>
+							<div class="digit">2</div>
+							<div class="digit">1</div>
+							<div class="digit">0</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+</div>
 </body>
 <script src="./js/main.js"></script>
 </html>
