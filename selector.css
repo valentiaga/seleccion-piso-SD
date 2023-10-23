@@ -27,21 +27,26 @@ p {
 }
 
 span {
+	margin: 20px 0 30px;
 	font-size: 12px;
-	color: #FFFFFF;
+	color: #696969;
 }
 
-button {
+#btn_ingresar {
 	border-radius: 20px;
 	border: 1px solid #FF4B2B;
 	background-color: #FF4B2B;
 	color: #FFFFFF;
+	cursor: pointer;
 	font-size: 12px;
 	font-weight: bold;
 	padding: 12px 45px;
 	letter-spacing: 1px;
 	text-transform: uppercase;
-	transition: transform 80ms ease-in;
+
+	&:hover {
+		background-color: #ea3a1a; 
+	}
 }
 
 form {
@@ -68,9 +73,8 @@ input {
 	border-radius: 10px;
 	box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
 	position: relative;
-	width: 768px;
-	max-width: 100%;
-	min-height: 480px;
+	width: 900px;
+	min-height: 580px;
 }
 
 .authentication-container {
@@ -81,7 +85,6 @@ input {
 	width: 50%;
 	z-index: 2;
 }
-
 
 .floor-container {
 	position: absolute;
@@ -120,12 +123,18 @@ input {
 	right: 0;
 }
 
+.pad{
+	display: grid;
+	grid-template-columns: 1fr;
+	grid-template-rows: repeat(11, 1fr);
+	grid-row-gap: 3px;
+}
+
 .tecladoPisos {
 	/* background-color: #eaeaea; */
 	align-items: center;
 	justify-content: center;
 	margin: 50 auto;
-	/* position: relative; */
 }
 
 .row{
@@ -135,30 +144,83 @@ input {
 }
 .digit {
 	background-color: #a2a2a2;
+	border: 1px solid 	#a2a2a2;
 	color: white;
 	cursor: pointer;
 	font-family: 'Mina', sans-serif;
 	font-size: 25px;
-	height: 50px;
-	margin: 10px;
-	line-height: 50px;
+	border-radius: 25px;
+	/* height: 10px; */
+	/* margin: 10px; */
+	/* line-height: 50px; */
 	text-align: center;
-	width: 70px;
+	width: 100%;
+	text-shadow: 1px 1px 2px rgb(63, 62, 62);
+	box-shadow: 3px 5px 7px 0px rgb(63, 62, 62);
 
 	&:hover {
 		background-color: #5d5d5d;
-		color: white;
 	}
 }
 
 
+.seleccion{
+	display: grid;
+	grid-template-columns: 1fr 3fr 1fr  1fr ;
+	grid-template-rows: 1fr;
+	grid-column-gap: 2px;
+
+}
+
 .inputSeleccion {
 	display: block;
-	border-radius: 10;
+	border-radius: 5px;
 	font-family: 'Mina', sans-serif;
 	font-size: 20px;
 	text-align: center;
-	margin-left: 37px;
+	margin-left:50 auto;
+	grid-column-start: 2;
+	grid-column-end: 4;
 	/* position: relative; */
-	width: 200px;
+	/* width: 200px; */
+}
+
+#btn_borrar{
+	margin: auto;
+	display: block;
+	width: 25px;
+	height: 25px;
+	border-radius: 50%;
+	background-color: #FF4B2B;
+	border: none;
+	color: #FFFFFF;
+	cursor: pointer;
+	font-size: 20px;
+	text-align: center;
+	font-weight: bold;
+	align-items: center;
+	justify-content: center;
+	text-shadow: 1px 1px 2px rgb(63, 62, 62);
+	box-shadow: 3px 5px 7px 0px rgb(63, 62, 62);
+	grid-column: 4;
+	
+	&:hover {
+		background-color: #ea3a1a;
+	}
+}
+
+.rfid{
+	background-color: white;
+	border-color: rgba(63, 62, 62, 0.155);
+	border-radius: 50%;
+	background-image:url('resources/rfid2.png');
+	background-repeat:no-repeat;
+	height:100px;
+	width: 100px;
+	background-size: 60px;
+	background-position:center;
+
+	&:hover {
+		background-color: #e3e3e3;
+	}
 }

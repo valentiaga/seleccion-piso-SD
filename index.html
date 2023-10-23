@@ -12,8 +12,8 @@
 			<form action="#">
 				<h1>Autenticación</h1>
 				<span>Ingresa tu id</span>
-				<input type="id" placeholder="Id" />
-				<button>Ingresar</button>
+				<input type="id" id="input_id" placeholder="Id" />
+				<button id="btn_ingresar">Ingresar</button>
 			</form>
 		</div>
 		<div class="floor-container">
@@ -21,26 +21,22 @@
 				<div class="right-panel">
 					<h1>Selector de pisos</h1>
 					<div class="tecladoPisos">
-						<input class="inputSeleccion" type="text" disabled>
+						<div class="seleccion">
+							<input class="inputSeleccion" type="text" disabled>
+							<button id="btn_borrar">x</button>
+						</div>
 						<div class="pad">
-							<div class="row">
-								<div class="digit">9</div>
-								<div class="digit">8</div>
-								<div class="digit">7</div>
-							</div>
-							<div class="row">
-								<div class="digit">6</div>
-								<div class="digit">5</div>
-								<div class="digit">4</div>
-							</div>
-							<div class="row">
-								<div class="digit">3</div>
-								<div class="digit">2</div>
-								<div class="digit">1</div>
-							</div>
-							<div class="row">
-								<div class="digit">0</div>
-							</div>
+							<div class="digit">10</div>
+							<div class="digit">9</div>
+							<div class="digit">8</div>
+							<div class="digit">7</div>
+							<div class="digit">6</div>
+							<div class="digit">5</div>
+							<div class="digit">4</div>
+							<div class="digit">3</div>
+							<div class="digit">2</div>
+							<div class="digit">1</div>
+							<div class="digit">0</div>
 						</div>
 					</div>
 				</div>
@@ -48,5 +44,6 @@
 		</div>
 	</div>
 </body>
-<script src="./js/main.js"></script>
+<script src="./js/cliente.js"></script>
+<!-- <script src="./js/gateway.mjs"></script> -->
 </html>
