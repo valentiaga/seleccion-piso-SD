@@ -15,6 +15,52 @@ function init() {
         });
     });
 
+    let btn_ingresar = document.getElementById('btn_ingresar');
+    
+    btn_ingresar.addEventListener('click',evaluate())
+}
+
+function evaluate(){
+    // chequea si el id fue ingresado, y si hay piso 
+}
+
+function solicitud_acceso(){
+    // Cuando ya esta seleccionado un piso
+    var ip = 'localhoost'
+
+    const options = {
+        hostname: ip,
+        port: 4000, // Puerto del Microservicio 1
+        path: '/solicitud_acceso', // Ruta específica del Microservicio 1
+        // method: 'solicitud_acceso',
+      //   headers: req.headers
+      };
+  
+    const proxyRequest = http.request(options, (proxyResponse) => {
+
+        // res.writeHead(proxyResponse.statusCode, proxyResponse.headers);
+        // proxyResponse.pipe(res, {
+        //   end: true
+        // });
+        let body = ''
+
+        response.on('data', (chunk) => {
+          body += chunk;
+        });
+      
+        response.on('end', () => {
+          console.log('2) Received: ' + body);
+        });
+      
+        response.on('close', () => {
+            console.log('3) Connection closed');
+        });
+
+      });
+}
+
+function mostrar_datos(){
+    
 }
 
 init();

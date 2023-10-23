@@ -11,13 +11,9 @@
 		<div class="authentication-container">
 			<form action="#">
 				<h1>Autenticación</h1>
-				<h3>Ingresa tu id</h3>
-				<input type="id" placeholder="Id" />
-				<button>Ingresar</button>
-				<br><br><br>
-				<h3>O ingresa con tu tarjeta RFID</h3>
-				<button class="rfid"></button>
-				<span>Tocá el icono y acercá tu tarjeta al lector</span>
+				<span>Ingresa tu id</span>
+				<input type="id" id="input_id" placeholder="Id" />
+				<button id="btn_ingresar">Ingresar</button>
 			</form>
 		</div>
 		<div class="floor-container">
@@ -27,7 +23,7 @@
 					<div class="tecladoPisos">
 						<div class="seleccion">
 							<input class="inputSeleccion" type="text" disabled>
-							<div class="borrar">x</div>
+							<button id="btn_borrar">x</button>
 						</div>
 						<div class="pad">
 							<div class="digit">10</div>
@@ -49,5 +45,6 @@
 	</div>
 </div>
 </body>
-<script src="./js/main.js"></script>
+<script src="./js/cliente.js"></script>
+<!-- <script src="./js/gateway.mjs"></script> -->
 </html>
