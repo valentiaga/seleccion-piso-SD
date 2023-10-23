@@ -4,6 +4,7 @@ let id = -1
 function reseteo() {
     // colocar un 0 inicial en la pantalla
     document.querySelector('.inputSeleccion').value = "";
+    alert('llegue')
 }
 
 function init() {
@@ -25,6 +26,9 @@ function init() {
    
     let btn_ingresar = document.getElementById('btn_ingresar');
     btn_ingresar.addEventListener('click', solicitud_acceso)
+
+    let btn_borrarPiso = document.getElementById('btn_borrar')
+    btn_borrarPiso.addEventListener('click', reseteo)
 
 }
 
