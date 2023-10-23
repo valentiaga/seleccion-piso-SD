@@ -38,9 +38,9 @@
 // HTTP server
 // server.js
 
-import { createServer } from 'http';
+const http = require('http')
 
-const server = createServer(function (request, response) {
+const server = http.createServer(function (request, response) {
   console.log('2) Socket connected');
 
   let body = '';
