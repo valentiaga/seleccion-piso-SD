@@ -1,5 +1,7 @@
 * {
 	box-sizing: border-box;
+	margin: 0;
+    padding: 0;
 }
 
 body {
@@ -223,4 +225,10 @@ input {
 	&:hover {
 		background-color: #e3e3e3;
 	}
+}
+
+.swal2-popup {
+    font-size: 15px; /* Ajusta el tamaño de fuente según sea necesario */
+    /* padding: 1.25rem; Ajusta el relleno según sea necesario */
+    
 }

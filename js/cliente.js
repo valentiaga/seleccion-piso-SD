@@ -1,4 +1,4 @@
-let seleccion = -1;
+let pisoElegido = -1;
 let id = -1;
 
 function reseteo() {
@@ -25,15 +25,15 @@ function init() {
 }
 
 function solicitud_acceso() {
-  seleccion = document.querySelector('.inputSeleccion').value;
-  if (seleccion !== "") {
+  pisoElegido = document.querySelector('.inputSeleccion').value;
+  if (pisoElegido !== "") {
     id = document.getElementById('input_id').value;
     console.log('Id ' + id);
     if (id !== '') {
 
       let body = {
         'id': id,
-        'piso': seleccion
+        'piso': pisoElegido
       }
       const url = 'http://localhost:3000/solicitud_acceso'; // Reemplaza con tu URL
 
@@ -56,10 +56,25 @@ function solicitud_acceso() {
           console.error('Error:', error);
         });
     } else {
-      alert('Ingrese id');
+      Toastify({
+        text: "Ingrese ID",
+        backgroundColor: "gray", // Cambia el color de fondo como desees
+        position: "center" ,
+        duration: 3000
+      }).showToast();
     }
   } else {
-    alert("Debes ingresar un piso");
+    document.body.style.overflow = 'hidden';
+    Toastify({
+      text: "Seleccione el piso al que desea ir",
+      backgroundColor: "gray", // Cambia el color de fondo como desees
+      position: "center" ,
+      duration: 3000
+    }).showToast();
+    // Swal.fire({
+    //   title: 'Seleccione el piso al que desea ir.',
+    //   icon: 'info'
+    // })
   }
 }
 
