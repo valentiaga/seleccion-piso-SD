@@ -36,10 +36,16 @@ function solicitud_acceso() {
         'piso': pisoElegido
       }
       const url = 'http://localhost:3000/solicitud_acceso'; // Reemplaza con tu URL
+      // const url = {http : 'http',
+      // host : 'localhost',
+      // port : 3000,
+      // path : '/solicitud_acceso'}
+      const path = '/solicitud_acceso'
 
       fetch(url, {
         method: 'POST',
         body: JSON.stringify(body),
+        path : JSON.stringify(path)
       })
         .then(response => {
           if (response.ok) {

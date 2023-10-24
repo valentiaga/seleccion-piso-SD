@@ -38,26 +38,29 @@
 // HTTP server
 // server.js
 
-const http = require('http')
+const http = require('http');
+const path = require('path');
 
 const server = http.createServer(function (request, response) {
-  console.log('2) Socket connected');
+  
+  if (request.url === '/solicitud_acceso'){
+    let body = '';
+    request.on('data', (chunk) => {
+      body += chunk;
+    });
 
-  let body = '';
+    request.on('end', () => {
+      console.log('3) Server received: ' + body)
+      console.log('4) Write: Mundo')
+      console.log('5) URL = '+ request.url)
+      response.end('Mundo');
+    });
 
-  request.on('data', (chunk) => {
-    body += chunk;
-  });
-
-  request.on('end', () => {
-		console.log('3) Server received: ' + body)
-		console.log('4) Write: Mundo')
-    response.end('Mundo');
-  });
-
-  request.on('close', () => {
-		console.log('5) Socket closed');
-  });
+    request.on('close', () => {
+      console.log('6) Socket closed');
+    });
+  }
+  
 
 });
 
