@@ -34,6 +34,7 @@ span {
 	color: #696969;
 }
 
+#btn_consultar,
 #btn_ingresar {
 	border-radius: 20px;
 	border: 1px solid #FF4B2B;
@@ -45,6 +46,7 @@ span {
 	padding: 12px 45px;
 	letter-spacing: 1px;
 	text-transform: uppercase;
+	margin: 5px;
 
 	&:hover {
 		background-color: #ea3a1a; 

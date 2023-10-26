@@ -59,6 +59,8 @@ const server = http.createServer(function (request, response) {
     request.on('close', () => {
       console.log('6) Socket closed');
     });
+  } else if (request.url === '/consulta_piso'){
+    // Para mandar la consulta de a que pisos puede ingresar
   }
   
 

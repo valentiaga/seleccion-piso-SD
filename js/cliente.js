@@ -22,6 +22,9 @@ function init() {
 
   let btn_borrarPiso = document.getElementById('btn_borrar');
   btn_borrarPiso.addEventListener('click', reseteo);
+
+  let btn_consultarPisos = document.getElementById('btn_consultar');
+  btn_consultarPisos.addEventListener('click', consulta_piso);
 }
 
 function solicitud_acceso() {
@@ -45,7 +48,10 @@ function solicitud_acceso() {
       fetch(url, {
         method: 'POST',
         body: JSON.stringify(body),
-        path : JSON.stringify(path)
+        path : JSON.stringify(path),
+        headers: {
+          'Content-Type': 'application/json'
+        }
       })
         .then(response => {
           if (response.ok) {
@@ -81,6 +87,47 @@ function solicitud_acceso() {
     //   title: 'Seleccione el piso al que desea ir.',
     //   icon: 'info'
     // })
+  }
+}
+
+function consulta_piso(){
+  id = document.getElementById('input_id').value;
+  if (id !== '') {
+    let body = {
+      'id': id,
+    }
+    const url = 'http://localhost:3000/consulta_piso';
+
+    fetch(url, {
+      method: 'POST',
+      body: JSON.stringify(body),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(response => {
+        if (response.ok) {
+         return response.json();
+        } else {
+          throw new Error('Error en la solicitud');
+        }
+      })
+      .then(data => {
+        
+        //Creo pop up que muestre los pisos a los que puede acceder el visitante
+        
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+
+  } else {
+      Toastify({
+        text: "Ingrese ID",
+        backgroundColor: "grey", 
+        position: "center" ,
+        duration: 3000
+      }).showToast();
   }
 }
 
