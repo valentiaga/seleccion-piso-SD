@@ -29,6 +29,7 @@ function init() {
 
 function solicitud_acceso() {
   pisoElegido = document.querySelector('.inputSeleccion').value;
+  console.log('piso elegido:', pisoElegido)
   if (pisoElegido !== "") {
     id = document.getElementById('input_id').value;
     console.log('Id ' + id);
@@ -38,6 +39,9 @@ function solicitud_acceso() {
         'id': id,
         'piso': pisoElegido
       }
+
+      console.log('DATA:', body);
+
       const url = 'http://localhost:3000/solicitud_acceso'; // Reemplaza con tu URL
       // const url = {http : 'http',
       // host : 'localhost',
@@ -49,9 +53,6 @@ function solicitud_acceso() {
         method: 'POST',
         body: JSON.stringify(body),
         path : JSON.stringify(path),
-        headers: {
-          'Content-Type': 'application/json'
-        }
       })
         .then(response => {
           if (response.ok) {
@@ -83,10 +84,6 @@ function solicitud_acceso() {
       position: "center" ,
       duration: 3000
     }).showToast();
-    // Swal.fire({
-    //   title: 'Seleccione el piso al que desea ir.',
-    //   icon: 'info'
-    // })
   }
 }
 
@@ -114,7 +111,33 @@ function consulta_piso(){
       })
       .then(data => {
         
+        // Data vuelve como JSON y va a tener estos datos
+        // const data = {
+        // "id": "A001",
+        // "nombre": "Nombre Completo",
+        // "edad": 25,
+        // "email": "email@gmail.com",  
+        // "pisos_permitidos": [1, 3],
+        // "fecha_checkIn": "2023-09-13T23:09:40.880Z",
+        // "fecha_checkOut": "2023-09-15T23:09:40.880Z"
+        
+        //Formateo los datos
+        // const formattedData = `
+        // <p><strong>ID:</strong> ${data.id}</p>
+        // <p><strong>Nombre:</strong> ${data.nombre}</p>
+        // <p><strong>Edad:</strong> ${data.edad}</p>
+        // <p><strong>Email:</strong> ${data.email}</p>
+        // <p><strong>Pisos Permitidos:</strong> ${data.pisos_permitidos.join(', ')}</p>
+        // <p><strong>Fecha Check-In:</strong> ${data.fecha_checkIn}</p>
+        // <p><strong>Fecha Check-Out:</strong> ${data.fecha_checkOut}</p>
+        // `;
+
         //Creo pop up que muestre los pisos a los que puede acceder el visitante
+        Swal.fire({
+             title: 'DATOS VISITANTE.',
+             icon: 'info',
+             // html: formattedData,
+        })
         
       })
       .catch(error => {
