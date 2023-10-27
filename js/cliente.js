@@ -94,13 +94,10 @@ function consulta_piso(){
       'id': id,
     }
     const url = 'http://localhost:3000/consulta_piso';
-
+    
     fetch(url, {
       method: 'POST',
       body: JSON.stringify(body),
-      headers: {
-        'Content-Type': 'application/json'
-      }
     })
       .then(response => {
         if (response.ok) {

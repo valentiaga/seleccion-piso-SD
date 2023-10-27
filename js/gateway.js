@@ -57,14 +57,80 @@ const server = http.createServer(function (request, response) {
       console.log('3) Server received: ' + body)
       console.log('4) Write: Mundo')
       console.log('5) URL = '+ request.url)
+
+      // URL del selector de pisos
+      const url = 'http://localhost:4000/solicitud_acceso';
+      const path = '/solicitud_acceso'
+
+      fetch(url, {
+        method: 'POST',
+        body: body,
+        path : JSON.stringify(path),
+      })
+        .then(response => {
+          if (response.ok) {
+            return response.json();
+          } else {
+            throw new Error('Error en la solicitud');
+          }
+        })
+        .then(data => {
+          console.log('Respuesta del servidor:', data);
+          // Realiza la lógica necesaria con la respuesta del servidor
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+
+
       response.end('Mundo');
     });
 
     request.on('close', () => {
       console.log('6) Socket closed');
     });
+
   } else if (request.url === '/consulta_piso'){
-    // Para mandar la consulta de a que pisos puede ingresar
+      let body = '';
+      request.on('data', (chunk) => {
+      body += chunk;
+      });
+    
+      request.on('end', () => {
+      console.log('3) Server received: ' + body)
+      console.log('5) URL = '+ request.url)
+
+      // URL de consulta de piso
+      const url = 'http://localhost:4000/consulta_piso';
+      const path = '/consulta_piso'
+
+      fetch(url, {
+        method: 'POST',
+        body: body,
+        path : JSON.stringify(path),
+      })
+        .then(response => {
+          if (response.ok) {
+            return response.json();
+          } else {
+            throw new Error('Error en la solicitud');
+          }
+        })
+        .then(data => {
+          console.log('Respuesta del servidor:', data);
+          // Realiza la lógica necesaria con la respuesta del servidor
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+
+      response.end('Mundo');
+    });
+
+    request.on('close', () => {
+      console.log('6) Socket closed');
+    });
+    
   }
   
 
