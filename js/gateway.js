@@ -82,7 +82,7 @@ const server = http.createServer(function (request, response) {
           console.error('Error:', error);
         });
 
-
+      //Debe mandar los datos correspondientes
       response.end('Mundo');
     });
 
@@ -118,13 +118,15 @@ const server = http.createServer(function (request, response) {
         })
         .then(data => {
           console.log('Respuesta del servidor:', data);
-          // Realiza la lógica necesaria con la respuesta del servidor
+          responseData = data; // Almacena los datos en la variable responseData
         })
         .catch(error => {
           console.error('Error:', error);
+        })
+        .finally(() => {
+          // Envía la respuesta al cliente
+          response.end(JSON.stringify(responseData)); // Envía la respuesta al cliente
         });
-
-      response.end('Mundo');
     });
 
     request.on('close', () => {

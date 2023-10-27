@@ -36,6 +36,11 @@ const path = require('path');
 
 const server = http.createServer(function (request, response) {
 
+  // Configuración de CORS
+  response.setHeader('Access-Control-Allow-Origin', 'http://localhost:5500');
+  response.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  response.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
     if (request.url === '/solicitud_acceso'){
         let body = '';
         request.on('data', (chunk) => {
@@ -58,10 +63,15 @@ const server = http.createServer(function (request, response) {
         request.on('end', () => {
           
             //Paso de JSON para comparar despues
-            const objeto = JSON.parse(body);
+            const peticion = JSON.parse(body);
+            const objetoEncontrado = data.find((objeto) => objeto.id === peticion.id);
+
+            console.log('Coincidencia: ', objetoEncontrado)
               
             console.log('3) Selector_Pisos recibe: ' + body)
             console.log('4) URL = '+ request.url)
+
+            response.end(JSON.stringify(objetoEncontrado))
   
           });
           request.on('close', () => {
@@ -80,8 +90,4 @@ server.listen(4000, function() {
   
 function busco_datos(data,objeto) {
     //Para buscar 
- }
-
- function en_archivo(id){
-    
  }
