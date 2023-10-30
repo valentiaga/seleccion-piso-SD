@@ -40,6 +40,7 @@
 
 const http = require('http');
 const path = require('path');
+const { send } = require('process');
 
 const server = http.createServer(function (request, response) {
 
@@ -49,41 +50,46 @@ const server = http.createServer(function (request, response) {
   response.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   
   if (request.url === '/solicitud_acceso'){
+
     let body = '';
     request.on('data', (chunk) => {
       body += chunk;
     });
+
     request.on('end', () => {
-      console.log('3) Server received: ' + body)
-      console.log('4) Write: Mundo')
-      console.log('5) URL = '+ request.url)
+      console.log('3) Server received: ' + body);
+      console.log('4) Write: Mundo');
+      console.log('5) URL = '+ request.url);
 
       // URL del selector de pisos
       const url = 'http://localhost:4000/solicitud_acceso';
-      const path = '/solicitud_acceso'
+      const path = '/solicitud_acceso';
 
-      fetch(url, {
-        method: 'POST',
-        body: body,
-        path : JSON.stringify(path),
-      })
-        .then(response => {
-          if (response.ok) {
-            return response.json();
-          } else {
-            throw new Error('Error en la solicitud');
-          }
-        })
-        .then(data => {
-          console.log('Respuesta del servidor:', data);
-          // Realiza la lógica necesaria con la respuesta del servidor
-        })
-        .catch(error => {
-          console.error('Error:', error);
-        });
+      send_request(url,'POST',body);
 
+      // fetch(url, {
+      //   method: 'POST',
+      //   body: body,
+      //   path : JSON.stringify(path),
+      // })
+      //   .then(response => {
+      //     if (response.ok) {
+      //       return response.json();
+      //     } else {
+      //       throw new Error('Error en la solicitud');
+      //     }
+      //   })
+      //   .then(data => {
+      //     console.log('Respuesta del servidor:', data);
+      //     // Realiza la lógica necesaria con la respuesta del servidor
+      //   })
+      //   .catch(error => {
+      //     console.error('Error:', error);
+      //   });
+        
       //Debe mandar los datos correspondientes
-      response.end('Mundo');
+      response.end('Gateway1');
+      
     });
 
     request.on('close', () => {
@@ -104,29 +110,31 @@ const server = http.createServer(function (request, response) {
       const url = 'http://localhost:4000/consulta_piso';
       const path = '/consulta_piso'
 
-      fetch(url, {
-        method: 'POST',
-        body: body,
-        path : JSON.stringify(path),
-      })
-        .then(response => {
-          if (response.ok) {
-            return response.json();
-          } else {
-            throw new Error('Error en la solicitud');
-          }
-        })
-        .then(data => {
-          console.log('Respuesta del servidor:', data);
-          responseData = data; // Almacena los datos en la variable responseData
-        })
-        .catch(error => {
-          console.error('Error:', error);
-        })
-        .finally(() => {
-          // Envía la respuesta al cliente
-          response.end(JSON.stringify(responseData)); // Envía la respuesta al cliente
-        });
+      send_request(url,'POST',body);
+
+      // fetch(url, {
+      //   method: 'POST',
+      //   body: body,
+      //   path : JSON.stringify(path),
+      // })
+      //   .then(response => {
+      //     if (response.ok) {
+      //       return response.json();
+      //     } else {
+      //       throw new Error('Error en la solicitud');
+      //     }
+      //   })
+      //   .then(data => {
+      //     console.log('Respuesta del servidor:', data);
+      //     responseData = data; // Almacena los datos en la variable responseData
+      //   })
+      //   .catch(error => {
+      //     console.error('Error:', error);
+      //   })
+      //   .finally(() => {
+      //     // Envía la respuesta al cliente
+      //     response.end(JSON.stringify(responseData)); // Envía la respuesta al cliente
+      //   });
     });
 
     request.on('close', () => {
@@ -141,3 +149,28 @@ const server = http.createServer(function (request, response) {
 server.listen(3000, function() {
   console.log('1) Server started');
 });
+
+function send_request(url, method, body) {
+    return fetch(url, {
+      method: method,
+      body: body,
+    })
+    .then(response => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw new Error('Error en la solicitud');
+      }
+    })
+    .then(data => {
+      console.log('Respuesta del servidor:', data);
+      // Realiza la lógica necesaria con la respuesta del servidor
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    })
+    .finally(() => {
+      // Envía la respuesta al cliente
+      response.end(JSON.stringify(responseData)); // Envía la respuesta al cliente
+    });
+}

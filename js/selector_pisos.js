@@ -63,14 +63,14 @@ const server = http.createServer(function (request, response) {
         request.on('end', () => {
           
             //Paso de JSON para comparar despues
-            const peticion = JSON.parse(body);
-            const objetoEncontrado = data.find((objeto) => objeto.id === peticion.id);
+            // const peticion = JSON.parse(body);
+            // const objetoEncontrado = data.find((objeto) => objeto.id === peticion.id);
 
-            console.log('Coincidencia: ', objetoEncontrado)
+            // console.log('Coincidencia: ', objetoEncontrado)
               
-            console.log('3) Selector_Pisos recibe: ' + body)
-            console.log('4) URL = '+ request.url)
-
+            // console.log('3) Selector_Pisos recibe: ' + body)
+            // console.log('4) URL = '+ request.url)
+            objetoEncontrado = 1
             response.end(JSON.stringify(objetoEncontrado))
   
           });
