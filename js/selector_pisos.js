@@ -84,10 +84,18 @@ const server = http.createServer(function (request, response) {
 
 });
 
+
+
 server.listen(4000, function() {
     console.log('1) Server started');
   });
   
+
+function acceso(request){
+
+}
+
 function busco_datos(data,objeto) {
     //Para buscar 
  }
+
