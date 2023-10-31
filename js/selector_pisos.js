@@ -36,10 +36,10 @@ const path = require('path');
 
 const server = http.createServer(function (request, response) {
 
-  // Configuración de CORS
-  response.setHeader('Access-Control-Allow-Origin', 'http://localhost:5500');
-  response.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-  response.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  // Configuración de CORS------ que onda esto??
+  // response.setHeader('Access-Control-Allow-Origin', 'http://localhost:5500');
+  // response.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  // response.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
     if (request.url === '/solicitud_acceso'){
         let body = '';
