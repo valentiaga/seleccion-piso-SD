@@ -61,6 +61,8 @@ server.listen(3000, function() {
   console.log('1) Server started');
 });
 
+
+
 function send_request(url, method, body) {
     return fetch(url, {
       method: method,
@@ -79,9 +81,5 @@ function send_request(url, method, body) {
     })
     .catch(error => {
       console.error('Error:', error);
-    })
-    .finally(() => {
-      // Envía la respuesta al cliente
-      response.end(JSON.stringify(responseData)); // Envía la respuesta al cliente
     });
 }

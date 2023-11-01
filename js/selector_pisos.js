@@ -1,6 +1,6 @@
 const http = require('http');
-const URL_PERMISOS = 'http://localhost:8080/'
-const URL_ASCENSOR = 'http://localhost:8080/'
+const URL_PERMISOS = 'http://localhost:9000/permisos'
+const URL_ASCENSOR = 'http://localhost:9001/solicita_ascensor'
 //A modo de prueba agregamos unos JSON con datos de visitantes
 const datos = `[
     {
@@ -31,121 +31,156 @@ const datos = `[
       "fecha_checkOut": "2023-09-17T17:10:25.890Z"
     }
   ]`;
-  
+
 const data = JSON.parse(datos);
 
 
 
 const server = http.createServer(function (request, response) {
-    if (request.url === '/solicitud_acceso'){
-        let body = '';
-        
-        request.on('data', (chunk) => {
-          body += chunk;
-        });
+  if (request.url === '/solicitud_acceso') {
+    let body = '';
 
-        request.on('end', () => {
-          try{
-            request_data = JSON.parse(body)
-            resp = solicitar_acceso(request_data)
-            response.statusCode= resp[0]
-            response.end(JSON.stringify(resp[1]))
-          }catch(error){
-            response.statusCode = 400
-            response.end('Error en los datos JSON de la solicitud')
-          }
-        });
+    request.on('data', (chunk) => {
+      body += chunk;
+    });
 
-    } else if (request.url === '/consulta_datos'){
-        let body = '';
-        request.on('data', (chunk) => {
-          body += chunk;
-        });
-        request.on('end', () => {
-          
-            //Paso de JSON para comparar despues
-            // const peticion = JSON.parse(body);
-            // const objetoEncontrado = data.find((objeto) => objeto.id === peticion.id);
-
-            // console.log('Coincidencia: ', objetoEncontrado)
-              
-            // console.log('3) Selector_Pisos recibe: ' + body)
-            // console.log('4) URL = '+ request.url)
-            objetoEncontrado = 1
-            response.end(JSON.stringify(objetoEncontrado))
-  
-          });
-
-    }else {
-        response.statusCode = 404;
-        response.end('Ruta no encontrada');
+    request.on('end', () => {
+      console.log("El selector recibe " + body)
+      try {
+        request_data = JSON.parse(body)
+        console.log("parseado " + request_data)
+        resp = solicitar_acceso(request_data)
+        response.statusCode = resp.code
+        response.end(JSON.stringify(resp.ascensor))
+      } catch (error) {
+        response.statusCode = 400
+        response.end('Error en los datos JSON de la solicitud')
       }
+    });
+
+  } else if (request.url === '/consulta_datos') {
+    let body = '';
+    request.on('data', (chunk) => {
+      body += chunk;
+    });
+    request.on('end', () => {
+
+      //Paso de JSON para comparar despues
+      // const peticion = JSON.parse(body);
+      // const objetoEncontrado = data.find((objeto) => objeto.id === peticion.id);
+
+      // console.log('Coincidencia: ', objetoEncontrado)
+
+      // console.log('3) Selector_Pisos recibe: ' + body)
+      // console.log('4) URL = '+ request.url)
+      objetoEncontrado = 1
+      response.end(JSON.stringify(objetoEncontrado))
+
+    });
+
+  } else {
+    response.statusCode = 404;
+    response.end('Ruta no encontrada');
+  }
 
 });
-  
-function validar_permisos(request, datos){
+
+function validar_permisos(request, datos) {
   //verifica que el piso solicitado este en los autorizados
   return true
 }
 
-function solicitar_datos(data){
-  const id = {"id": data.id}
-  let datos = ''
-  
-  const request = http.request(URL_PERMISOS,{ method: 'GET' },
-    function (response) {
-      let body = ''
-      
-      response.on('data', (chunk) => {
-        body += chunk;
-      });
+// function solicitar_datos(data){
+//   const id = {"id": data.id}
+//   let datos = ''
 
-      response.on('end', () => {
-        datos = body
-      });
-    });
+//   const request = http.request(URL_PERMISOS,{ method: 'GET' },
+//     function (response) {
+//       let body = ''
 
-    request.write(JSON.stringify(id));
-    request.end();
+//       response.on('data', (chunk) => {
+//         body += chunk;
+//       });
 
-  return datos
-}
+//       response.on('end', () => {
+//         datos = body
+//       });
+//     });
 
-function solicitar_acceso(request_data){
-  respuesta = []
-  datos = solicitar_datos(request_data) 
-  if (validar_permisos(request_data, datos)){
-    respuesta[0] = 200
-    respuesta[1] = solicitar_ascensor(request_data)
+//     request.write(JSON.stringify(id));
+//     request.end();
+
+//   return datos
+// }
+
+function solicitar_acceso(request_data) {
+  datos = send_request({ "id": request_data.id },
+    URL_PERMISOS,
+    'POST');
+    console.log("aca toy")
+    // no llega acaaaaaaaaaaaa
+  if (validar_permisos(request_data, datos)) {
+    
+    respuesta = {
+      "code": 200,
+      "ascensor": send_request({ "piso": request_data.piso },
+        URL_ASCENSOR,
+        'POST')
+    }
   }
-  else{
-    respuesta[0] = 403
-    respuesta[1] = ""
+  else {
+    respuesta = {
+      "code": 403,
+      "ascensor": ""
+    }
   }
+  console.log("solicitar_acceso respuesta :"+ respuesta);
   return respuesta
 }
 
-function solicitar_ascensor(data){
-  const piso = {"piso": data.piso}
-  let ascensor = ''
+// function solicitar_ascensor(data){
+//   const piso = {"piso": data.piso}
+//   let ascensor = ''
 
-  const request = http.request(URL_ASCENSOR,{ method: 'POST' },
+//   const request = http.request(URL_ASCENSOR,{ method: 'POST' },
+//     function (response) {
+//       let body = ''
+
+//       response.on('data', (chunk) => {
+//         body += chunk;
+//       });
+
+//       response.on('end', () => {
+//         ascensor = body
+//       });
+//     });
+//     request.write(JSON.stringify(piso));
+//     request.end();
+//   return ascensor
+// }
+
+function send_request(data, url, method) {
+  console.log(data)
+  let aux = ''
+  const request = http.request(url, { method: method },
     function (response) {
       let body = ''
-      
-      response.on('data', (chunk) => {
+      request.on('data', (chunk) => {
         body += chunk;
       });
 
-      response.on('end', () => {
-        ascensor = body
+      request.on('end', () => {
+        console.log("El selector recibe " + body)
+        aux =  body
       });
     });
-    request.write(JSON.stringify(piso));
-    request.end();
-  return ascensor
+  console.log(JSON.stringify(data))
+  request.write(JSON.stringify(data));
+  request.end();
+  
+  return aux
 }
 
-server.listen(4000, function() {
+server.listen(4000, function () {
   console.log('1) Server started');
 });
