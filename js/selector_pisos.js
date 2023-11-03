@@ -1,4 +1,5 @@
 const http = require('http');
+const { resolve } = require('path');
 const URL_PERMISOS = 'http://localhost:9000/permisos'
 const URL_ASCENSOR = 'http://localhost:9001/ascensor'
 //A modo de prueba agregamos unos JSON con datos de visitantes
@@ -34,8 +35,6 @@ const datos = `[
 
 const data = JSON.parse(datos);
 
-
-
 const server = http.createServer(function (request, response) {
 
   response.setHeader('Content-Type', 'application/json');
@@ -50,12 +49,13 @@ const server = http.createServer(function (request, response) {
     request.on('end', () => {
       console.log("El selector recibe del gateway " + body)
       try {
-        request_data = JSON.parse(body)
-        console.log("parseado " + request_data);
-        console.log("request data id: " + request_data.piso);
-        resp = solicitar_acceso(request_data)
+        request_data = JSON.parse(body);
+        // console.log("parseado " + request_data);
+        // console.log("request data id: " + request_data.piso);
+        
+        resp = solicitar_acceso(request_data); 
         console.log("Respuesta: " +resp.code);
-        response.statusCode = resp.code
+        response.statusCode = resp.code;
         // response.write(resp.ascensor)
         response.end(resp.ascensor)
       } catch (error) {
@@ -70,15 +70,6 @@ const server = http.createServer(function (request, response) {
       body += chunk;
     });
     request.on('end', () => {
-
-      //Paso de JSON para comparar despues
-      // const peticion = JSON.parse(body);
-      // const objetoEncontrado = data.find((objeto) => objeto.id === peticion.id);
-
-      // console.log('Coincidencia: ', objetoEncontrado)
-
-      // console.log('3) Selector_Pisos recibe: ' + body)
-      // console.log('4) URL = '+ request.url)
       objetoEncontrado = 1
       response.end(JSON.stringify(objetoEncontrado))
 
@@ -96,23 +87,21 @@ function validar_permisos(request, datos) {
   return true
 }
 
-function solicitar_acceso(request_data) {
-  // console.log("aca toyyyyyyy")
+async function solicitar_acceso(request_data) {
+  
   let data = { id: request_data.id }
   // console.log("quiero enviar esto " + data)
-  let datos = send_request(data,
-    URL_PERMISOS,
-    'POST');
+  let datos = await send_request(data, URL_PERMISOS,'GET');
 
-    console.log("aca toy de nuevo"+datos)
+    console.log("aca toy de nuevo "+datos)
  
-  if (validar_permisos(request_data, datos)) {
-    let asc = send_request({ piso: request_data.piso },URL_ASCENSOR,'POST')
-    console.log("Luego de la funcion: "+asc)
-    console.log(typeof(asc))
+  if (validar_permisos(request_data, datos)) { // enviamos solicitud ascensor
+
+    let asc = await send_request({ piso: request_data.piso },URL_ASCENSOR,'POST')
+    console.log("Luego de la funcion: "+asc.ascensor)
     respuesta = {
       code: 200,
-      ascensor: asc
+      ascensor: asc.ascensor
     }
     console.log("solicitar_acceso respuesta :" + respuesta.ascensor);
     // respuesta.ascensor = JSON.parse(respuesta.ascensor)
@@ -129,33 +118,32 @@ function solicitar_acceso(request_data) {
 }
 
 function send_request(data, url, method) {
-
-  console.log("1)Enviamos al mock" + data)
-  let rtaMock = '';
-  const request = http.request(url, { method: method },
-    function (response) {
+  return new Promise((resolve,reject)=>{
+    console.log("1)Enviamos al mock" + data);
+    const request = http.request(url, { method: method },
+      function (response) {
       
-      let body = ''
-      response.on('data', (chunk) => {
-        body += chunk;
+        let body = ''
+        response.on('data', (chunk) => {
+          body += chunk;
+        });
+
+       response.on('end', () => {
+          console.log("3)El selector recibe del mock " + body)
+          body = JSON.parse(body);
+          resolve(body)
+        });
       });
 
-      response.on('end', () => {
-        console.log("3)El selector recibe del mock " + body)
-        // console.log("Tipo de dato: "+typeof (body));
-        body = JSON.parse(body);
-        console.log("Tipo de dato: "+typeof (body));
-        return body
-      });
-    });
-
-  data = JSON.stringify(data);
-  console.log("2) " + data)
-  request.write(data);
-  request.end();
-  
+    data = JSON.stringify(data);
+    console.log("2) " + data)
+    if (method!='GET'){
+     request.write(data);
+    }
+    request.end();
+  })
 }
 
-server.listen(4000, function () {
-  console.log('1) Selector server started');
-});
+  server.listen(4000, function () {
+  console.log('Selector server started');
+  });
