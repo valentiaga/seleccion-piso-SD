@@ -8,9 +8,7 @@ const server = http.createServer(function (request, response) {
   // Configuración de CORS
   response.setHeader('Access-Control-Allow-Origin', 'http://localhost:5500');
   response.setHeader('Content-Type', 'application/json');
-  // response.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-  // response.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  
+    
   if (request.url === '/solicitud_acceso'){
 
     let body = '';
@@ -28,8 +26,11 @@ const server = http.createServer(function (request, response) {
       const path = '/solicitud_acceso';
       
       body = JSON.parse(body);
-      rtaSelector = send_request(url,'POST',JSON.stringify(body));
-      response.end(rtaSelector);
+      
+      send_request(url,'POST',JSON.stringify(body))
+      .then((rtaSelector) => {
+        response.end(rtaSelector);
+      })
     });
 
     request.on('close', () => {
@@ -64,48 +65,24 @@ server.listen(3000, function() {
   console.log('1) Server started');
 });
 
-
-function send_request(url, method, data) {
-  console.log(data)
-  let rtaSelector = ''
-  const request = http.request(url, { method: method },
-    function (response) {
-      let body = ''
-      // console.log(response.);
-      response.on('data', (chunk) => {
-        body += chunk;
-      });
-
-      response.on('end', () => {
-        console.log("El gateway recibe " + body)
-        rtaSelector =  body
-      });
-    });
-  console.log("El gateway envia" + data)
-  // request.setHeader('Content-Type', 'application/json');
-  request.write(data);
-  request.end();
+function send_request(data, url, method) {
+  return new Promise((resolve,reject)=>{
+    const request = http.request(url, { method: method },
+      function (response) {
+        let body = ''
+        response.on('data', (chunk) => {
+          body += chunk;
+        });
   
-  return rtaSelector
+        response.on('end', () => {
+          console.log("El gateway recibe " + body)
+          resolve(body)
+        });
+      });
+    console.log("El gateway envia" + data)
+    if( method != 'GET'){
+      request.write(data);   
+    }
+    request.end();
+  })
 }
-
-// function send_request(url, method, body) {
-//     return fetch(url, {
-//       method: method,
-//       body: body,
-//     })
-//     .then(response => {
-//       if (response.ok) {
-//         return response.json();
-//       } else {
-//         throw new Error('Error en la solicitud');
-//       }
-//     })
-//     .then(data => {
-//       console.log('Respuesta del servidor:', data);
-//       // Realiza la lógica necesaria con la respuesta del servidor
-//     })
-//     .catch(error => {
-//       console.error('Error:', error);
-//     });
-// }

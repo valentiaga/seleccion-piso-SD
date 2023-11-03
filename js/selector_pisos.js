@@ -50,14 +50,12 @@ const server = http.createServer(function (request, response) {
       console.log("El selector recibe del gateway " + body)
       try {
         request_data = JSON.parse(body);
-        // console.log("parseado " + request_data);
-        // console.log("request data id: " + request_data.piso);
-        
-        resp = solicitar_acceso(request_data); 
-        console.log("Respuesta: " +resp.code);
-        response.statusCode = resp.code;
-        // response.write(resp.ascensor)
-        response.end(resp.ascensor)
+    
+        //solictar_acceso es async, entonces devuelve una promesa
+        solicitar_acceso(request_data)
+          .then((resp) => {
+            response.end(JSON.stringify(resp))
+          })        
       } catch (error) {
         response.statusCode = 400
         response.end('Error en los datos JSON de la solicitud')
@@ -90,7 +88,6 @@ function validar_permisos(request, datos) {
 async function solicitar_acceso(request_data) {
   
   let data = { id: request_data.id }
-  // console.log("quiero enviar esto " + data)
   let datos = await send_request(data, URL_PERMISOS,'GET');
 
     console.log("aca toy de nuevo "+datos)
