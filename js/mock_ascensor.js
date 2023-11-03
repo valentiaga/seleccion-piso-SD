@@ -1,7 +1,8 @@
 const http = require('http');
 
 const server = http.createServer(function (request, response) {
-    if (request.url === '/solicita_ascensor') {
+  // console.log("entra")
+    if (request.url === '/ascensor') {
        console.log("entra")
       let body = '';
   

@@ -71,6 +71,7 @@ function send_request(url, method, data) {
   const request = http.request(url, { method: method },
     function (response) {
       let body = ''
+      // console.log(response.);
       response.on('data', (chunk) => {
         body += chunk;
       });

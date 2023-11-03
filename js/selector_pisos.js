@@ -1,6 +1,6 @@
 const http = require('http');
 const URL_PERMISOS = 'http://localhost:9000/permisos'
-const URL_ASCENSOR = 'http://localhost:9001/solicita_ascensor'
+const URL_ASCENSOR = 'http://localhost:9001/ascensor'
 //A modo de prueba agregamos unos JSON con datos de visitantes
 const datos = `[
     {
@@ -54,7 +54,9 @@ const server = http.createServer(function (request, response) {
         console.log("parseado " + request_data);
         console.log("request data id: " + request_data.piso);
         resp = solicitar_acceso(request_data)
+        console.log("Respuesta" +resp.ascensor);
         response.statusCode = resp.code
+        // response.write(resp.ascensor)
         response.end(resp.ascensor)
       } catch (error) {
         response.statusCode = 400
@@ -98,7 +100,7 @@ function solicitar_acceso(request_data) {
   console.log("aca toyyyyyyy")
   let data = { id: request_data.id }
   console.log("quiero enviar esto " + data)
-  datos = send_request(data,
+  let datos = send_request(data,
     URL_PERMISOS,
     'POST');
   console.log("aca toy de nuevo")
@@ -106,23 +108,23 @@ function solicitar_acceso(request_data) {
   if (validar_permisos(request_data, datos)) {
 
     respuesta = {
-      "code": 200,
-      "ascensor": send_request({ piso: request_data.piso },
+      code: 200,
+      ascensor: send_request({ piso: request_data.piso },
         URL_ASCENSOR,
         'POST')
     }
   }
   else {
     respuesta = {
-      "code": 403,
-      "ascensor": ""
+      code: 403,
+      ascensor: ""
     }
   }
-  console.log("solicitar_acceso respuesta :" + respuesta);
+  console.log("solicitar_acceso respuesta :" + respuesta.code);
   return respuesta
 }
 
-function send_request(data, url, method,resp) {
+function send_request(data, url, method) {
 
   console.log("1)Enviamos al mock" + data)
   let rtaMock = '';
@@ -135,7 +137,7 @@ function send_request(data, url, method,resp) {
 
       response.on('end', () => {
         console.log("3)El selector recibe del mock " + body)
-        resp = body
+        return body
       });
     });
 
