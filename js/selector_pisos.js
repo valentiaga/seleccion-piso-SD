@@ -49,12 +49,10 @@ const server = http.createServer(function (request, response) {
 
     request.on('end', () => {
       console.log("El selector recibe del gateway " + body)
-      console.log("TIPO body: " +typeof body);
       try {
         request_data = JSON.parse(body)
-        console.log("parseado " + request_data)
-        console.log("TIPO: " +typeof request_data);
-        console.log("request data id: "+request_data.piso);
+        console.log("parseado " + request_data);
+        console.log("request data id: " + request_data.piso);
         resp = solicitar_acceso(request_data)
         response.statusCode = resp.code
         response.end(resp.ascensor)
@@ -96,40 +94,20 @@ function validar_permisos(request, datos) {
   return true
 }
 
-// function solicitar_datos(data){
-//   const id = {"id": data.id}
-//   let datos = ''
-
-//   const request = http.request(URL_PERMISOS,{ method: 'GET' },
-//     function (response) {
-//       let body = ''
-
-//       response.on('data', (chunk) => {
-//         body += chunk;
-//       });
-
-//       response.on('end', () => {
-//         datos = body
-//       });
-//     });
-
-//     request.write(JSON.stringify(id));
-//     request.end();
-
-//   return datos
-// }
-
 function solicitar_acceso(request_data) {
-  datos = send_request({ "id": request_data.id },
+  console.log("aca toyyyyyyy")
+  let data = { id: request_data.id }
+  console.log("quiero enviar esto " + data)
+  datos = send_request(data,
     URL_PERMISOS,
     'POST');
-    console.log("aca toy")
-    // no llega acaaaaaaaaaaaa
+  console.log("aca toy de nuevo")
+  // no llega acaaaaaaaaaaaa
   if (validar_permisos(request_data, datos)) {
-    
+
     respuesta = {
       "code": 200,
-      "ascensor": send_request({ "piso": request_data.piso },
+      "ascensor": send_request({ piso: request_data.piso },
         URL_ASCENSOR,
         'POST')
     }
@@ -140,34 +118,14 @@ function solicitar_acceso(request_data) {
       "ascensor": ""
     }
   }
-  console.log("solicitar_acceso respuesta :"+ respuesta);
+  console.log("solicitar_acceso respuesta :" + respuesta);
   return respuesta
 }
 
-// function solicitar_ascensor(data){
-//   const piso = {"piso": data.piso}
-//   let ascensor = ''
+function send_request(data, url, method,resp) {
 
-//   const request = http.request(URL_ASCENSOR,{ method: 'POST' },
-//     function (response) {
-//       let body = ''
-
-//       response.on('data', (chunk) => {
-//         body += chunk;
-//       });
-
-//       response.on('end', () => {
-//         ascensor = body
-//       });
-//     });
-//     request.write(JSON.stringify(piso));
-//     request.end();
-//   return ascensor
-// }
-
-function send_request(data, url, method) {
-  console.log("Enviamos al mock"+data)
-  let rtaMock = ''
+  console.log("1)Enviamos al mock" + data)
+  let rtaMock = '';
   const request = http.request(url, { method: method },
     function (response) {
       let body = ''
@@ -176,15 +134,16 @@ function send_request(data, url, method) {
       });
 
       response.on('end', () => {
-        console.log("El selector recibe del mock " + body)
-        rtaMock =  body
+        console.log("3)El selector recibe del mock " + body)
+        resp = body
       });
     });
-  console.log(JSON.stringify(data))
-  request.write(JSON.stringify(data));
+
+  data = JSON.stringify(data);
+  console.log("2) " + data)
+  request.write(data);
   request.end();
   
-  return rtaMock
 }
 
 server.listen(4000, function () {
