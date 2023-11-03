@@ -37,6 +37,9 @@ const data = JSON.parse(datos);
 
 
 const server = http.createServer(function (request, response) {
+
+  response.setHeader('Content-Type', 'application/json');
+
   if (request.url === '/solicitud_acceso') {
     let body = '';
 
@@ -45,13 +48,16 @@ const server = http.createServer(function (request, response) {
     });
 
     request.on('end', () => {
-      console.log("El selector recibe " + body)
+      console.log("El selector recibe del gateway " + body)
+      console.log("TIPO body: " +typeof body);
       try {
         request_data = JSON.parse(body)
         console.log("parseado " + request_data)
+        console.log("TIPO: " +typeof request_data);
+        console.log("request data id: "+request_data.piso);
         resp = solicitar_acceso(request_data)
         response.statusCode = resp.code
-        response.end(JSON.stringify(resp.ascensor))
+        response.end(resp.ascensor)
       } catch (error) {
         response.statusCode = 400
         response.end('Error en los datos JSON de la solicitud')
@@ -160,27 +166,27 @@ function solicitar_acceso(request_data) {
 // }
 
 function send_request(data, url, method) {
-  console.log(data)
-  let aux = ''
+  console.log("Enviamos al mock"+data)
+  let rtaMock = ''
   const request = http.request(url, { method: method },
     function (response) {
       let body = ''
-      request.on('data', (chunk) => {
+      response.on('data', (chunk) => {
         body += chunk;
       });
 
-      request.on('end', () => {
-        console.log("El selector recibe " + body)
-        aux =  body
+      response.on('end', () => {
+        console.log("El selector recibe del mock " + body)
+        rtaMock =  body
       });
     });
   console.log(JSON.stringify(data))
   request.write(JSON.stringify(data));
   request.end();
   
-  return aux
+  return rtaMock
 }
 
 server.listen(4000, function () {
-  console.log('1) Server started');
+  console.log('1) Selector server started');
 });

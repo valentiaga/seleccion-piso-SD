@@ -29,7 +29,7 @@ function init() {
 
 function solicitud_acceso() {  
   const url = 'http://localhost:3000/solicitud_acceso'; 
-  pisoElegido = document.querySelector('.inputSeleccion').value;
+  pisoElegido = parseInt(document.querySelector('.inputSeleccion').value,10);
   id = document.getElementById('input_id').value;
 
   if (pisoElegido == "") {
@@ -44,19 +44,24 @@ function solicitud_acceso() {
   }
 
   let body = {
-    'id': id,
-    'piso': pisoElegido
+    id: id,
+    piso: pisoElegido
   }
 
   console.log('DATA:', body);
   
-  fetch(url, 
+  fetch(url,
     {
-    method: 'POST',
-    body: JSON.stringify(body),
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
     })
     .then(response => {
       if (response.ok) {
+        console.log('ok');
         return response.json();
       } else {
         throw new Error('Error en la solicitud');
@@ -85,7 +90,7 @@ function consulta_piso(){
   // console.log('Id ' + id);
 
   if (id == '') {
-    document.body.style.overflow = 'hidden';
+    // document.body.style.overflow = 'hidden';
     alerta("Ingrese ID");
     return
   }
