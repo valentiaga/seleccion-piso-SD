@@ -54,7 +54,7 @@ const server = http.createServer(function (request, response) {
         console.log("parseado " + request_data);
         console.log("request data id: " + request_data.piso);
         resp = solicitar_acceso(request_data)
-        console.log("Respuesta" +resp.ascensor);
+        console.log("Respuesta: " +resp.code);
         response.statusCode = resp.code
         // response.write(resp.ascensor)
         response.end(resp.ascensor)
@@ -97,22 +97,26 @@ function validar_permisos(request, datos) {
 }
 
 function solicitar_acceso(request_data) {
-  console.log("aca toyyyyyyy")
+  // console.log("aca toyyyyyyy")
   let data = { id: request_data.id }
-  console.log("quiero enviar esto " + data)
+  // console.log("quiero enviar esto " + data)
   let datos = send_request(data,
     URL_PERMISOS,
     'POST');
-  console.log("aca toy de nuevo")
-  // no llega acaaaaaaaaaaaa
-  if (validar_permisos(request_data, datos)) {
 
+    console.log("aca toy de nuevo"+datos)
+ 
+  if (validar_permisos(request_data, datos)) {
+    let asc = send_request({ piso: request_data.piso },URL_ASCENSOR,'POST')
+    console.log("Luego de la funcion: "+asc)
+    console.log(typeof(asc))
     respuesta = {
       code: 200,
-      ascensor: send_request({ piso: request_data.piso },
-        URL_ASCENSOR,
-        'POST')
+      ascensor: asc
     }
+    console.log("solicitar_acceso respuesta :" + respuesta.ascensor);
+    // respuesta.ascensor = JSON.parse(respuesta.ascensor)
+    
   }
   else {
     respuesta = {
@@ -120,7 +124,7 @@ function solicitar_acceso(request_data) {
       ascensor: ""
     }
   }
-  console.log("solicitar_acceso respuesta :" + respuesta.code);
+  // console.log("solicitar_acceso respuesta :" + respuesta.ascensor);
   return respuesta
 }
 
@@ -130,6 +134,7 @@ function send_request(data, url, method) {
   let rtaMock = '';
   const request = http.request(url, { method: method },
     function (response) {
+      
       let body = ''
       response.on('data', (chunk) => {
         body += chunk;
@@ -137,6 +142,9 @@ function send_request(data, url, method) {
 
       response.on('end', () => {
         console.log("3)El selector recibe del mock " + body)
+        // console.log("Tipo de dato: "+typeof (body));
+        body = JSON.parse(body);
+        console.log("Tipo de dato: "+typeof (body));
         return body
       });
     });
