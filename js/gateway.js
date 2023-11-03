@@ -27,7 +27,7 @@ const server = http.createServer(function (request, response) {
       
       body = JSON.parse(body);
       
-      send_request(url,'POST',JSON.stringify(body))
+      send_request(JSON.stringify(body),url,'POST')
       .then((rtaSelector) => {
         response.end(rtaSelector);
       })
