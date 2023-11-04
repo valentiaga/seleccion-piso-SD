@@ -33,12 +33,12 @@ function solicitud_acceso() {
   id = document.getElementById('input_id').value;
 
   if (pisoElegido == "") {
-    document.body.style.overflow = 'hidden';
+    // document.body.style.overflow = 'hidden';
     alerta("Seleccione el piso al que desea ir");
     return
   }
   if (id == '') {
-    document.body.style.overflow = 'hidden';
+    // document.body.style.overflow = 'hidden';
     alerta("Ingrese ID");
     return
   }
@@ -60,14 +60,18 @@ function solicitud_acceso() {
     })
     .then(response => {
       if (response.ok) {
-        console.log('ok '+ response.status);
+        // console.log('ok '+ response.status);
         return response.json();
       } else {
-        throw new Error('Error en la solicitud');
+        throw new Error('error en la solicitud');
       }
     })
     .then(data => {
       console.log('Respuesta del servidor:', data);
+      if (data.code == 200)
+        alerta ("Acceso permitido")
+      else if (data.code == 403)
+        alerta("Acceso denegado")
       // Realiza la lógica necesaria con la respuesta del servidor
     })
     .catch(error => {
