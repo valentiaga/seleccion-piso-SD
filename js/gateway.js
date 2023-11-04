@@ -45,6 +45,7 @@ const server = http.createServer(function (request, response) {
 
   } else if (request.url === '/consulta_datos'){
       let body = '';
+      // console.log("ENTREEEEE");
       request.on('data', (chunk) => {
       body += chunk;
       });
@@ -56,7 +57,10 @@ const server = http.createServer(function (request, response) {
       // URL de consulta de piso
       const url = 'http://localhost:4000/consulta_datos';
 
-      send_request(url,'POST',body);
+      send_request(JSON.stringify(body),url,'POST').then((rtaSelector) => {
+        console.log("Respuesta selector: " +rtaSelector);
+        response.end(rtaSelector);
+      })
     });
 
     request.on('close', () => {

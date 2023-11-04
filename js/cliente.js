@@ -29,7 +29,7 @@ function init() {
 
 function solicitud_acceso() {  
   const url = 'http://localhost:3000/acceso'; 
-  pisoElegido = parseInt(document.querySelector('.inputSeleccion').value,10);
+  pisoElegido = document.querySelector('.inputSeleccion').value;
   id = document.getElementById('input_id').value;
 
   if (pisoElegido == "") {
@@ -49,7 +49,7 @@ function solicitud_acceso() {
   }
 
   console.log('DATA:', body);
-  
+  pisoElegido = parseInt(pisoElegido,10)
   fetch(url,
     {
       method: 'POST',
@@ -101,7 +101,7 @@ function consulta_piso(){
   let body = {
     'id': id,
   }
-  const url = 'http://localhost:3000/consulta_piso';
+  const url = 'http://localhost:3000/consulta_datos';
 
   fetch(url, {
     method: 'POST',
@@ -116,7 +116,7 @@ function consulta_piso(){
     })
     .then(data => {
       
-      console.log(data) // no lo imprime
+      console.log(data) 
       // Data vuelve como JSON y va a tener estos datos
       // const data = {
       // "id": "A001",
@@ -128,21 +128,22 @@ function consulta_piso(){
       // "fecha_checkOut": "2023-09-15T23:09:40.880Z"
       
       //Formateo los datos
-      const formattedData = `
-      <p><strong>ID:</strong> ${data.id}</p>
-      <p><strong>Nombre:</strong> ${data.nombre}</p>
-      <p><strong>Edad:</strong> ${data.edad}</p>
-      <p><strong>Email:</strong> ${data.email}</p>
-      <p><strong>Pisos Permitidos:</strong> ${data.pisos_permitidos.join(', ')}</p>
-      <p><strong>Fecha Check-In:</strong> ${data.fecha_checkIn}</p>
-      <p><strong>Fecha Check-Out:</strong> ${data.fecha_checkOut}</p>
-      `;
+      // const formattedData = `
+      // <p><strong>ID:</strong> ${data.id}</p>
+      // <p><strong>Nombre:</strong> ${data.nombre}</p>
+      // <p><strong>Edad:</strong> ${data.edad}</p>
+      // <p><strong>Email:</strong> ${data.email}</p>
+      // <p><strong>Pisos Permitidos:</strong> ${data.pisos_permitidos.join(', ')}</p>
+      // <p><strong>Fecha Check-In:</strong> ${data.fecha_checkIn}</p>
+      // <p><strong>Fecha Check-Out:</strong> ${data.fecha_checkOut}</p>
+      // `;
 
       //Creo pop up que muestre los pisos a los que puede acceder el visitante
       Swal.fire({
             title: 'DATOS VISITANTE.',
             icon: 'info',
-            html: formattedData,
+            // html: formattedData,
+            html: data.pisos,
       })
       
     })

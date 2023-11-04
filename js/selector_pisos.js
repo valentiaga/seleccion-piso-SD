@@ -68,8 +68,19 @@ const server = http.createServer(function (request, response) {
       body += chunk;
     });
     request.on('end', () => {
-      objetoEncontrado = 1
-      response.end(JSON.stringify(objetoEncontrado))
+      try {
+        request_data = JSON.parse(body);
+    
+        //solictar_acceso es async, entonces devuelve una promesa
+        solicita_datos(request_data)
+          .then((resp) => {
+            response.end(JSON.stringify(resp))
+          })        
+      } catch (error) {
+        response.statusCode = 400
+        response.end('Error en los datos JSON de la solicitud')
+      }
+      
 
     });
 
@@ -90,6 +101,12 @@ function validar_permisos(request, datos) {
   }
   // console.log(request +" "+datos.pisos);
   return res
+}
+
+async function solicita_datos(request_data){
+  let data = { id: request_data.id }
+  let datos = await send_request(data, URL_PERMISOS,'GET');
+  return datos;
 }
 
 async function solicitar_acceso(request_data) {
