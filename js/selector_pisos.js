@@ -81,8 +81,15 @@ const server = http.createServer(function (request, response) {
 });
 
 function validar_permisos(request, datos) {
+  let res = false;
   //verifica que el piso solicitado este en los autorizados
-  return true
+  if (datos.pisos.includes(request.piso)) {
+    res = true
+  } else {
+    res = false
+  }
+  // console.log(request +" "+datos.pisos);
+  return res
 }
 
 async function solicitar_acceso(request_data) {
@@ -90,12 +97,12 @@ async function solicitar_acceso(request_data) {
   let data = { id: request_data.id }
   let datos = await send_request(data, URL_PERMISOS,'GET');
 
-    console.log("aca toy de nuevo "+datos)
+    // console.log("aca toy de nuevo "+datos)
  
   if (validar_permisos(request_data, datos)) { // enviamos solicitud ascensor
 
     let asc = await send_request({ piso: request_data.piso },URL_ASCENSOR,'POST')
-    console.log("Luego de la funcion: "+asc.ascensor)
+    // console.log("Luego de la funcion: "+asc.ascensor)
     respuesta = {
       code: 200,
       ascensor: asc.ascensor

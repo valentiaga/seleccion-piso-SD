@@ -13,8 +13,7 @@ const server = http.createServer(function (request, response) {
     response.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
     return response.end();
   }
-  // response.setHeader('Content-Type', 'application/json');
-    console.log(request.method);
+  
   if (request.url === '/acceso'){
 
     let body = '';
