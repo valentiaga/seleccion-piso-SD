@@ -231,6 +231,8 @@ input {
 
 .swal2-popup {
     font-size: 15px; /* Ajusta el tamaño de fuente según sea necesario */
-    /* padding: 1.25rem; Ajusta el relleno según sea necesario */
+    padding: 1.25rem; /*Ajusta el relleno según sea necesario */
+	font-family: 'Sans-serif'; /* Cambia 'TuTipoDeLetra' por la fuente deseada */
+	text-align: justify;
     
 }
