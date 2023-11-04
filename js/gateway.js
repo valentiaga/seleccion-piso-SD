@@ -6,10 +6,16 @@ const { send } = require('process');
 const server = http.createServer(function (request, response) {
 
   // Configuración de CORS
-  response.setHeader('Access-Control-Allow-Origin', 'http://localhost:5500');
-  response.setHeader('Content-Type', 'application/json');
-    
-  if (request.url === '/solicitud_acceso'){
+  // response.setHeader('Access-Control-Allow-Origin', 'http://localhost:5500');
+  response.setHeader('Access-Control-Allow-Origin', '*'); // Permitir todas las solicitudes
+  response.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  if (request.method === 'OPTIONS') {
+    response.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
+    return response.end();
+  }
+  // response.setHeader('Content-Type', 'application/json');
+    console.log(request.method);
+  if (request.url === '/acceso'){
 
     let body = '';
     let rtaSelector;
@@ -23,12 +29,13 @@ const server = http.createServer(function (request, response) {
       console.log('5) URL = '+ request.url);
       // URL del selector de pisos
       const url = 'http://localhost:4000/solicitud_acceso';
-      const path = '/solicitud_acceso';
+      const path = '/solicitud_acceso'
       
-      body = JSON.parse(body);
+      body = JSON.parse(body)
       
       send_request(JSON.stringify(body),url,'POST')
       .then((rtaSelector) => {
+        console.log("Respuesta selector: " +rtaSelector);
         response.end(rtaSelector);
       })
     });

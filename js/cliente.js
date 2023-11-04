@@ -28,7 +28,7 @@ function init() {
 }
 
 function solicitud_acceso() {  
-  const url = 'http://localhost:3000/solicitud_acceso'; 
+  const url = 'http://localhost:3000/acceso'; 
   pisoElegido = parseInt(document.querySelector('.inputSeleccion').value,10);
   id = document.getElementById('input_id').value;
 
@@ -53,7 +53,6 @@ function solicitud_acceso() {
   fetch(url,
     {
       method: 'POST',
-      mode: 'no-cors',
       headers: {
         'Content-Type': 'application/json'
       },
@@ -61,7 +60,7 @@ function solicitud_acceso() {
     })
     .then(response => {
       if (response.ok) {
-        console.log('ok');
+        console.log('ok '+ response.status);
         return response.json();
       } else {
         throw new Error('Error en la solicitud');
