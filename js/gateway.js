@@ -4,17 +4,15 @@ const path = require('path');
 const { send } = require('process');
 
 const server = http.createServer(function (request, response) {
-
-  // Configuración de CORS
-  // response.setHeader('Access-Control-Allow-Origin', 'http://localhost:5500');
   response.setHeader('Access-Control-Allow-Origin', '*'); // Permitir todas las solicitudes
   response.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
   if (request.method === 'OPTIONS') {
     response.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
     return response.end();
   }
-  
-  if (request.url === '/acceso'){
+
+  const parsedUrl =  url.slice(1).split('/')
+  if (parsedUrl[2] === '/acceso'){
 
     let body = '';
     let rtaSelector;
@@ -26,7 +24,7 @@ const server = http.createServer(function (request, response) {
       console.log('3 Gateway');
       console.log('4) Server received: ' + body);
       console.log('5) URL = '+ request.url);
-      // URL del selector de pisos
+
       const url = 'http://localhost:4000/solicitud_acceso';
       const path = '/solicitud_acceso'
       
@@ -43,9 +41,8 @@ const server = http.createServer(function (request, response) {
       console.log('6) Socket closed');
     });
 
-  } else if (request.url === '/consulta_datos'){
+  } else if (parsedUrl[2] === '/info'){
       let body = '';
-      // console.log("ENTREEEEE");
       request.on('data', (chunk) => {
       body += chunk;
       });
