@@ -62,7 +62,7 @@ function solicitud_acceso() {
     .then(data => {
       console.log('Respuesta del servidor:', data) 
       if (data.code == 200)
-        alerta ("Acceso permitido")
+        alerta ("Dirijase al ascensor: "+ data.ascensor.nombre)
       else if (data.code == 403)
         alerta("Acceso denegado")
       // Realiza la lógica necesaria con la respuesta del servidor

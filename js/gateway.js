@@ -20,7 +20,7 @@ const server = http.createServer(function (request, response) {
     const id = parsedUrl[1]
     const piso = parsedUrl[2] 
     console.log('4) gateway received: ' + id +' y '+ piso)
-    const url = 'http://localhost:4000/visitantes/'+ id +'/acceso'
+    const url = 'http://localhost:4000/visitantes/'+ id +'/'+ piso +'/acceso'
 
     send_request({url:url, method:'GET'})
     .then((rtaSelector) => {

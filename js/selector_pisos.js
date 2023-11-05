@@ -12,19 +12,21 @@ const server = http.createServer(function (request, response) {
 
   if (request.method=='GET' && parsedUrl.at(-1) === 'acceso') {
     
-    request_data = {id: parsedUrl[1], piso: parsedUrl[2]}
+    console.log('PISO: '+parsedUrl[2])
+    request_data = {id: parsedUrl[1], piso: Number(parsedUrl[2])}
 
     //solictar_acceso es async, entonces devuelve una promesa
     solicitar_acceso(request_data)
       .then((resp) => {
+        console.log('manda la data bien '+ JSON.stringify(resp))
         response.end(JSON.stringify(resp))
       }) 
       .catch((error) =>{
+        console.log(error)
         response.statusCode = 500
         response.end('Error en el servidor')
       })      
    
-
   } else if (request.method=='GET' && parsedUrl.at(-1) === 'info') {
 
     request_data = {id: parsedUrl[1]}
@@ -32,6 +34,7 @@ const server = http.createServer(function (request, response) {
     //solictar_acceso es async, entonces devuelve una promesa
     solicita_datos(request_data)
       .then((resp) => {
+        console.log('manda la data bien '+ JSON.stringify(resp))
         response.end(JSON.stringify(resp))
       })        
       .catch((error) =>{
@@ -40,7 +43,7 @@ const server = http.createServer(function (request, response) {
       })
     }else {
       response.statusCode = 404;
-      response.end('Ruta no encontrada');
+      response.end('Visitante no encontrado');
   }
 });
 
@@ -63,23 +66,23 @@ async function solicita_datos(request_data){
 }
 
 async function solicitar_acceso(request_data) {
-  console.log('Entra a solicitud de acceso')
   let url = URL_PERMISOS+'/visitantes/'+ request_data.id +'/permisos'
+  let respuesta
+  //que pasa si no el id no 
   let permisos = await send_request({url:URL_PERMISOS, method:'GET'});
   console.log('PERMISOS ', permisos)
-  if (validar_permisos(request_data, permisos)) { // enviamos solicitud ascensor
+  console.log('DATA SOLICITADA '+request_data.piso)
 
-    url = URL_ASCENSOR+'/visitantes/'+ request_data.id +'/info'
-    let asc = await send_request({data:{ piso: request_data.piso }, url: url, method:'POST'})
+  if (validar_permisos(request_data, permisos)) { // enviamos solicitud ascensor
+    url = URL_ASCENSOR+'/api/selectorAscensor'
+    let asc = await send_request({data:{ piso_origen:0, piso_destino: request_data.piso }, url: url, method:'POST'})
+    console.log("ASCENSOR :" + asc.nombre);
     respuesta = {
       code: 200,
-      ascensor: asc.ascensor
+      ascensor: asc
     }
-    console.log("solicitar_acceso respuesta :" + respuesta.ascensor);
     // respuesta.ascensor = JSON.parse(respuesta.ascensor)
-    
-  }
-  else {
+  }else {
     respuesta = {
       code: 403,
       ascensor: ""
