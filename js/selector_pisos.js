@@ -1,62 +1,47 @@
 const http = require('http');
-const { resolve } = require('path');
-const URL_PERMISOS = 'http://localhost:9000/permisos'
-const URL_ASCENSOR = 'http://localhost:9001/ascensor'
+const { resolve, parse } = require('path');
+const URL_PERMISOS = 'http://localhost:9000'
+const URL_ASCENSOR = 'http://localhost:9001'
 
 const server = http.createServer(function (request, response) {
 
   response.setHeader('Content-Type', 'application/json');
 
-  if (request.url === '/solicitud_acceso') {
-    let body = '';
+  console.log('URL recibido '+request.url)
+  const parsedUrl =  request.url.slice(1).split('/')
 
-    request.on('data', (chunk) => {
-      body += chunk;
-    });
-
-    request.on('end', () => {
-      console.log("El selector recibe del gateway " + body)
-      try {
-        request_data = JSON.parse(body);
+  if (request.method=='GET' && parsedUrl.at(-1) === 'acceso') {
     
-        //solictar_acceso es async, entonces devuelve una promesa
-        solicitar_acceso(request_data)
-          .then((resp) => {
-            response.end(JSON.stringify(resp))
-          })        
-      } catch (error) {
-        response.statusCode = 400
-        response.end('Error en los datos JSON de la solicitud')
-      }
-    });
+    request_data = {id: parsedUrl[1], piso: parsedUrl[2]}
 
-  } else if (request.url === '/consulta_datos') {
-    let body = '';
-    request.on('data', (chunk) => {
-      body += chunk;
-    });
-    request.on('end', () => {
-      try {
-        request_data = JSON.parse(body);
-    
-        //solictar_acceso es async, entonces devuelve una promesa
-        solicita_datos(request_data)
-          .then((resp) => {
-            response.end(JSON.stringify(resp))
-          })        
-      } catch (error) {
-        response.statusCode = 400
-        response.end('Error en los datos JSON de la solicitud')
-      }
-      
+    //solictar_acceso es async, entonces devuelve una promesa
+    solicitar_acceso(request_data)
+      .then((resp) => {
+        response.end(JSON.stringify(resp))
+      }) 
+      .catch((error) =>{
+        response.statusCode = 500
+        response.end('Error en el servidor')
+      })      
+   
 
-    });
+  } else if (request.method=='GET' && parsedUrl.at(-1) === 'info') {
 
-  } else {
-    response.statusCode = 404;
-    response.end('Ruta no encontrada');
+    request_data = {id: parsedUrl[1]}
+    console.log('id enviado: '+ request_data.id)
+    //solictar_acceso es async, entonces devuelve una promesa
+    solicita_datos(request_data)
+      .then((resp) => {
+        response.end(JSON.stringify(resp))
+      })        
+      .catch((error) =>{
+        response.statusCode = 500
+        response.end('Error en el servidor')
+      })
+    }else {
+      response.statusCode = 404;
+      response.end('Ruta no encontrada');
   }
-
 });
 
 function validar_permisos(request, datos) {
@@ -78,16 +63,14 @@ async function solicita_datos(request_data){
 }
 
 async function solicitar_acceso(request_data) {
-  
-  let data = { id: request_data.id }
-  let datos = await send_request(data, URL_PERMISOS,'GET');
+  console.log('Entra a solicitud de acceso')
+  let url = URL_PERMISOS+'/visitantes/'+ request_data.id +'/permisos'
+  let permisos = await send_request({url:URL_PERMISOS, method:'GET'});
+  console.log('PERMISOS ', permisos)
+  if (validar_permisos(request_data, permisos)) { // enviamos solicitud ascensor
 
-    // console.log("aca toy de nuevo "+datos)
- 
-  if (validar_permisos(request_data, datos)) { // enviamos solicitud ascensor
-
-    let asc = await send_request({ piso: request_data.piso },URL_ASCENSOR,'POST')
-    // console.log("Luego de la funcion: "+asc.ascensor)
+    url = URL_ASCENSOR+'/visitantes/'+ request_data.id +'/info'
+    let asc = await send_request({data:{ piso: request_data.piso }, url: url, method:'POST'})
     respuesta = {
       code: 200,
       ascensor: asc.ascensor
@@ -106,9 +89,8 @@ async function solicitar_acceso(request_data) {
   return respuesta
 }
 
-function send_request(data, url, method) {
+function send_request({data, url, method}={}) {
   return new Promise((resolve,reject)=>{
-    console.log("1)Enviamos al mock" + data);
     const request = http.request(url, { method: method },
       function (response) {
       
@@ -123,11 +105,11 @@ function send_request(data, url, method) {
           resolve(body)
         });
       });
-
-    data = JSON.stringify(data);
-    console.log("2) " + data)
+      
     if (method!='GET'){
-     request.write(data);
+      data = JSON.stringify(data);
+      console.log("2) " + data)
+      request.write(data);
     }
     request.end();
   })

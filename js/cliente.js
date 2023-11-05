@@ -28,7 +28,6 @@ function init() {
 }
 
 function solicitud_acceso() {  
-  const url = 'http://localhost:3000/acceso'  
   pisoElegido = document.querySelector('.inputSeleccion').value 
   id = document.getElementById('input_id').value 
 
@@ -42,21 +41,15 @@ function solicitud_acceso() {
     alerta("Ingrese ID") 
     return
   }
+  const url = 'http://localhost:3000/visitantes/'+id+'/'+pisoElegido+'/acceso'
 
-  let body = {
-    id: id,
-    piso: pisoElegido
-  }
-
-  console.log('DATA:', body) 
-  pisoElegido = parseInt(pisoElegido,10)
+  console.log('URL:', url) 
   fetch(url,
     {
-      method: 'POST',
+      method: 'GET',
       headers: {
         'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(body)
+      }
     })
     .then(response => {
       if (response.ok) {
@@ -98,7 +91,6 @@ function consulta_piso(){
   }
  
   const url = 'http://localhost:3000/visitantes/'+id+'/info'
-  console.log(url)
   fetch(url)
     .then(response => {
       if (response.ok) {

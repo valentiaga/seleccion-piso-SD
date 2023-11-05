@@ -4,6 +4,7 @@ const path = require('path');
 const { send } = require('process');
 
 const server = http.createServer(function (request, response) {
+
   response.setHeader('Access-Control-Allow-Origin', '*'); // Permitir todas las solicitudes
   response.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
   if (request.method === 'OPTIONS') {
@@ -11,59 +12,34 @@ const server = http.createServer(function (request, response) {
     return response.end();
   }
 
-  const parsedUrl =  url.slice(1).split('/')
-  if (parsedUrl[2] === '/acceso'){
+  console.log('URL recibido '+request.url)
+  const parsedUrl =  request.url.slice(1).split('/')
 
-    let body = '';
-    let rtaSelector;
-    request.on('data', (chunk) => {
-      console.log('recibe' + chunk)
-      body += chunk;
-    });
-    request.on('end', () => {
-      console.log('3 Gateway');
-      console.log('4) Server received: ' + body);
-      console.log('5) URL = '+ request.url);
+  if (request.method=='GET' && parsedUrl.at(-1) === 'acceso'){
+    console.log('3 URL = '+ request.url);
+    const id = parsedUrl[1]
+    const piso = parsedUrl[2] 
+    console.log('4) gateway received: ' + id +' y '+ piso)
+    const url = 'http://localhost:4000/visitantes/'+ id +'/acceso'
 
-      const url = 'http://localhost:4000/solicitud_acceso';
-      const path = '/solicitud_acceso'
-      
-      body = JSON.parse(body)
-      
-      send_request(JSON.stringify(body),url,'POST')
+    send_request({url:url, method:'GET'})
+    .then((rtaSelector) => {
+      console.log("Respuesta selector: " +rtaSelector);
+      response.end(rtaSelector);
+    })
+
+  } else if (request.method=='GET' && parsedUrl.at(-1) === 'info'){
+      const id = parsedUrl[1]
+      console.log('3) Server received: ' + id)
+      console.log('4) URL = '+ request.url)
+
+      const url = 'http://localhost:4000/visitantes/'+ id +'/info'
+
+      send_request({url:url, method:'GET'})
       .then((rtaSelector) => {
         console.log("Respuesta selector: " +rtaSelector);
         response.end(rtaSelector);
       })
-    });
-
-    request.on('close', () => {
-      console.log('6) Socket closed');
-    });
-
-  } else if (parsedUrl[2] === '/info'){
-      let body = '';
-      request.on('data', (chunk) => {
-      body += chunk;
-      });
-    
-      request.on('end', () => {
-      console.log('3) Server received: ' + body)
-      console.log('5) URL = '+ request.url)
-
-      // URL de consulta de piso
-      const url = 'http://localhost:4000/consulta_datos';
-
-      send_request(JSON.stringify(body),url,'POST').then((rtaSelector) => {
-        console.log("Respuesta selector: " +rtaSelector);
-        response.end(rtaSelector);
-      })
-    });
-
-    request.on('close', () => {
-      console.log('6) Socket closed');
-    });
-    
   }
   
 });
@@ -72,7 +48,9 @@ server.listen(3000, function() {
   console.log('1) Server started');
 });
 
-function send_request(data, url, method) {
+
+function send_request({url, method, data}={}) {
+  console.log('entra 1')
   return new Promise((resolve,reject)=>{
     const request = http.request(url, { method: method },
       function (response) {
@@ -86,10 +64,11 @@ function send_request(data, url, method) {
           resolve(body)
         });
       });
-    console.log("El gateway envia" + data)
     if( method != 'GET'){
+      console.log("El gateway envia" + data)
       request.write(data);   
     }
+    console.log('entra 2')
     request.end();
   })
 }

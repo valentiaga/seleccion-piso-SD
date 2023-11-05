@@ -34,33 +34,27 @@ const datos = `[
 const data = JSON.parse(datos);
 
 const server = http.createServer(function (request, response) {
-    if (request.url === '/permisos') {
-      console.log("entra")
-      let body = '';
-  
-      request.on('data', (chunk) => {
-        console.log("chunk"+chunk);
-        body += chunk;
-      });
-  
-      request.on('end', () => {
-        console.log("permisos recibe " + body);
-        let mock = {
-            "pisos" : [1,5,7],
-            "id": "A001",
-            "nombre": "Juan Pérez",
-            "edad": 25,
-            "email": "juan.perez@example.com",
-        }
-        response.statusCode = 200
-        response.end(JSON.stringify(mock))
-      });
-  
-    } else {
-      response.statusCode = 404;
-      response.end('Ruta no encontrada');
-    }
+  console.log("entra")
+  let body = '';
+
+  request.on('data', (chunk) => {
+    console.log("chunk"+chunk);
+    body += chunk;
   });
+
+  request.on('end', () => {
+    console.log("permisos recibe " + body);
+    let mock = {
+        "pisos" : [1,5,7],
+        "id": "A001",
+        "nombre": "Juan Pérez",
+        "edad": 25,
+        "email": "juan.perez@example.com",
+    }
+    response.statusCode = 200
+    response.end(JSON.stringify(mock))
+  });
+});
 
   server.listen(9000, function () {
     console.log('1) Permisos Server started');
