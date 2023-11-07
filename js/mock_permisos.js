@@ -34,16 +34,12 @@ const datos = `[
 const data = JSON.parse(datos);
 
 const server = http.createServer(function (request, response) {
-  console.log("entra")
-  let body = '';
+  console.log('URL recibido '+request.url)
+  const parsedUrl =  request.url.slice(1).split('/')
 
-  request.on('data', (chunk) => {
-    console.log("chunk"+chunk);
-    body += chunk;
-  });
-
-  request.on('end', () => {
-    console.log("permisos recibe " + body);
+  if (request.method=='GET' && parsedUrl.at(-1) === 'permisos') {
+     
+    console.log("permisos recibe " + parsedUrl[1]);
     let mock = {
         "pisos" : [1,5,7],
         "id": "A001",
@@ -53,10 +49,9 @@ const server = http.createServer(function (request, response) {
     }
     response.statusCode = 200
     response.end(JSON.stringify(mock))
-  });
-});
+}})
 
-  server.listen(9000, function () {
-    console.log('1) Permisos Server started');
-  });
+server.listen(9000, function () {
+  console.log('1) Permisos Server started');
+})
   

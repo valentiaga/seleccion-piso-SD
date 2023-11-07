@@ -61,15 +61,15 @@ function validar_permisos(request, datos) {
 
 async function solicita_datos(request_data){
   let data = { id: request_data.id }
-  let datos = await send_request(data, URL_PERMISOS,'GET');
+  let url = URL_PERMISOS+'/visitantes/'+ request_data.id +'/permisos'
+  let datos = await send_request({url:url, method:'GET'});
   return datos;
 }
 
 async function solicitar_acceso(request_data) {
   let url = URL_PERMISOS+'/visitantes/'+ request_data.id +'/permisos'
-  let respuesta
   //que pasa si no el id no 
-  let permisos = await send_request({url:URL_PERMISOS, method:'GET'});
+  let permisos = await send_request({url:url, method:'GET'});
   console.log('PERMISOS ', permisos)
   console.log('DATA SOLICITADA '+request_data.piso)
 
