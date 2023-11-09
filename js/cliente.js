@@ -27,7 +27,7 @@ function init() {
   btn_consultarDatos.addEventListener('click', consulta_datos) 
 
   let btn_consultarPisos = document.getElementById('btn_consultarPisos') 
-  btn_consultarDatos.addEventListener('click', consulta_pisos) 
+  btn_consultarPisos.addEventListener('click', consulta_pisos) 
 }
 
 function solicitud_acceso() {  
@@ -137,7 +137,7 @@ function consulta_pisos(){
     return
   }
  
-  const url = 'http://localhost:3000/visitantes/'+id+'/permisos'
+  const url = 'http://localhost:3000/visitantes/'+id+'/info'
   fetch(url)
     .then(response => {
       if (response.ok) {

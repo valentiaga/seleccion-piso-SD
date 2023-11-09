@@ -34,7 +34,7 @@ span {
 	color: #696969;
 }
 
-#btn_consultar {
+#btn_consultarPisos, #btn_consultarDatos{
 	border-radius: 20px;
 	border: 1px solid #FF4B2B;
 	background-color: #FF4B2B;
