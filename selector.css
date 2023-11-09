@@ -72,14 +72,6 @@ input {
 	width: 100%;
 }
 
-.container {
-	background-color: #fff;
-	border-radius: 10px;
-	box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
-	position: relative;
-	width: 900px;
-	min-height: 580px;
-}
 
 .authentication-container {
 	position: absolute;
@@ -130,12 +122,11 @@ input {
 .pad{
 	display: grid;
 	grid-template-columns: 1fr;
-	grid-template-rows: repeat(11, 1fr);
-	grid-row-gap: 3px;
+	grid-row-gap: 1px;
+	width: 500px;
 }
 
 .tecladoPisos {
-	/* background-color: #eaeaea; */
 	align-items: center;
 	justify-content: center;
 	margin: 50 auto;
@@ -152,9 +143,9 @@ input {
 	color: white;
 	cursor: pointer;
 	font-family: 'Mina', sans-serif;
-	font-size: 25px;
+	/* font-size: 10px; */
 	border-radius: 25px;
-	/* height: 10px; */
+	height: 22px;
 	/* margin: 10px; */
 	/* line-height: 50px; */
 	text-align: center;
@@ -167,13 +158,11 @@ input {
 	}
 }
 
-
 .seleccion{
 	display: grid;
 	grid-template-columns: 1fr 3fr 1fr  1fr ;
 	grid-template-rows: 1fr;
 	grid-column-gap: 2px;
-
 }
 
 .inputSeleccion {
@@ -185,8 +174,6 @@ input {
 	margin-left:50 auto;
 	grid-column-start: 2;
 	grid-column-end: 4;
-	/* position: relative; */
-	/* width: 200px; */
 }
 
 #btn_borrar{

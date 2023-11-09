@@ -56,7 +56,7 @@ function solicitud_acceso() {
         // console.log('ok '+ response.status) 
         return response.json() 
       } else {
-        throw new Error('error en la solicitud') 
+        throw new Error('error en la solicitud') //aca habria que poner un alerta?
       }
     })
     .then(data => {
@@ -68,7 +68,7 @@ function solicitud_acceso() {
       // Realiza la lógica necesaria con la respuesta del servidor
     })
     .catch(error => {
-      console.error('Error:', error) 
+      alerta("No es posible ejecutar su solicitud. Reintente mas tarde")
     }) 
 }
 
@@ -125,8 +125,5 @@ function consulta_piso(){
     }) 
 }
 
-function mostrar_datos() {
-  // Realiza la lógica para mostrar datos si es necesario
-}
 
 init() 

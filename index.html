@@ -8,46 +8,44 @@
 </head>
 
 <body>
-	<div class="container" id="container">
-		<div class="authentication-container">
-			<form action="#">
-				<h1>Autenticación</h1>
-				<span>Ingresa tu id</span>
-				<input type="id" id="input_id" placeholder="Id" />
-				<button id="btn_ingresar">Ingresar</button>
-				<button id="btn_consultar">Consultar</button>
-			</form>
-		</div>
-		<div class="floor-container">
-			<div class="overlay">
-				<div class="right-panel">
-					<h1>Selector de pisos</h1>
-					<div class="tecladoPisos">
-						<div class="seleccion">
-							<input class="inputSeleccion" type="text" disabled>
-							<button id="btn_borrar">x</button>
-						</div>
-						<div class="pad">
-							<div class="digit">10</div>
-							<div class="digit">9</div>
-							<div class="digit">8</div>
-							<div class="digit">7</div>
-							<div class="digit">6</div>
-							<div class="digit">5</div>
-							<div class="digit">4</div>
-							<div class="digit">3</div>
-							<div class="digit">2</div>
-							<div class="digit">1</div>
-							<div class="digit">0</div>
-						</div>
+	<div class="authentication-container">
+		<form action="#">
+			<h1>Autenticación</h1>
+			<span>Ingresa tu id</span>
+			<input type="id" id="input_id" placeholder="Id" />
+			<button id="btn_ingresar">Ingresar</button>
+			<button id="btn_consultar">Consultar</button>
+			<br>
+			<h2>Piso seleccionado</h2>
+			<div class="seleccion">
+				<input class="inputSeleccion" type="text" disabled>
+				<button id="btn_borrar">x</button>
+			</div>
+		</form>
+	</div>
+	<div class="floor-container">
+		<div class="overlay">
+			<div class="right-panel">
+				<div class="tecladoPisos">
+					<div class="pad">
+						<script>
+							let div
+							for (let i = 25; i >= 0; i--) {
+								div = document.createElement('div');
+								div.classList.add('digit');
+								div.textContent = i;
+								document.querySelector('.pad').appendChild(div);
+							}
+						</script>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+</div>
+
 </body>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 <script src="./js/cliente.js"></script>
-<!-- <script src="./js/gateway.js"></script> -->
 </html>

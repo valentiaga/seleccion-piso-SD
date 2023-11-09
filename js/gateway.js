@@ -40,6 +40,7 @@ const server = http.createServer(function (request, response) {
         console.log("Respuesta selector: " +rtaSelector);
         response.end(rtaSelector);
       })
+      //habria que agregarle un catch por si tiene un error y que devuelva un codigo de error
   }
   
 });
