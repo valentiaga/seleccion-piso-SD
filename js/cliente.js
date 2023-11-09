@@ -13,7 +13,7 @@ function init() {
   pad_numerico.forEach(function (pad_numero) {
     // 3. Asignar evento click al botón numérico
     pad_numero.addEventListener('click', function (e) {
-      document.querySelector('.inputSeleccion').value = e.target.innerHTML 
+      document.querySelector('.inputSeleccion').value += e.target.innerHTML 
     }) 
   }) 
 
@@ -23,8 +23,11 @@ function init() {
   let btn_borrarPiso = document.getElementById('btn_borrar') 
   btn_borrarPiso.addEventListener('click', reseteo) 
 
-  let btn_consultarPisos = document.getElementById('btn_consultar') 
-  btn_consultarPisos.addEventListener('click', consulta_piso) 
+  let btn_consultarDatos = document.getElementById('btn_consultarDatos') 
+  btn_consultarDatos.addEventListener('click', consulta_datos) 
+
+  let btn_consultarPisos = document.getElementById('btn_consultarPisos') 
+  btn_consultarDatos.addEventListener('click', consulta_pisos) 
 }
 
 function solicitud_acceso() {  
@@ -81,7 +84,7 @@ function alerta(text){
   }).showToast() 
 }
 
-function consulta_piso(){
+function consulta_datos(){
   id = document.getElementById('input_id').value 
 
   if (id == '') {
@@ -115,6 +118,46 @@ function consulta_piso(){
       //Creo pop up que muestre los pisos a los que puede acceder el visitante
       Swal.fire({
             title: 'DATOS VISITANTE',
+            icon: 'info',
+            html: formattedData,
+      })
+      
+    })
+    .catch(error => {
+      console.error('Error:', error) 
+    }) 
+}
+
+function consulta_pisos(){
+  id = document.getElementById('input_id').value 
+
+  if (id == '') {
+    // document.body.style.overflow = 'hidden' 
+    alerta("Ingrese ID") 
+    return
+  }
+ 
+  const url = 'http://localhost:3000/visitantes/'+id+'/permisos'
+  fetch(url)
+    .then(response => {
+      if (response.ok) {
+        return response.json() 
+      } else {
+        throw new Error('Error en la solicitud') 
+      }
+    })
+    .then(data => {
+      
+      console.log(data) 
+      
+      //Formateo los datos
+      const formattedData = `
+      <p><strong>Pisos Permitidos:</strong> ${data.pisos}</p>
+      ` 
+
+      //Creo pop up que muestre los pisos a los que puede acceder el visitante
+      Swal.fire({
+            title: 'PISOS PERMITIDOS',
             icon: 'info',
             html: formattedData,
       })

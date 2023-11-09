@@ -11,33 +11,47 @@
 	<div class="authentication-container">
 		<form action="#">
 			<h1>Autenticación</h1>
-			<span>Ingresa tu id</span>
+			<span>Ingrese id o apoye tarjeta de indentficación</span>
 			<input type="id" id="input_id" placeholder="Id" />
-			<button id="btn_ingresar">Ingresar</button>
-			<button id="btn_consultar">Consultar</button>
+			<!-- <button id="btn_ingresar">Ingresar</button> -->
+			<button id="btn_consultarPisos">Pisos</button>
+			<button id="btn_consultarDatos">Datos</button>
 			<br>
-			<h2>Piso seleccionado</h2>
-			<div class="seleccion">
-				<input class="inputSeleccion" type="text" disabled>
-				<button id="btn_borrar">x</button>
-			</div>
+			<img class="logoRFID" src="./img/rfid.png" alt="">
 		</form>
 	</div>
 	<div class="floor-container">
 		<div class="overlay">
 			<div class="right-panel">
 				<div class="tecladoPisos">
-					<div class="pad">
-						<script>
-							let div
-							for (let i = 25; i >= 0; i--) {
-								div = document.createElement('div');
-								div.classList.add('digit');
-								div.textContent = i;
-								document.querySelector('.pad').appendChild(div);
-							}
-						</script>
+					<h2>Seleccione piso</h2>
+					<div class="seleccion">
+						<input class="inputSeleccion" type="text" disabled>
+						<button id="btn_borrar">x</button>
 					</div>
+					<div class="pad">
+						<div class="row">
+							<div class="digit">9</div>
+							<div class="digit">8</div>
+							<div class="digit">7</div>
+						</div>
+						<div class="row">
+							<div class="digit">6</div>
+							<div class="digit">5</div>
+							<div class="digit">4</div>
+						</div>
+						<div class="row">
+							<div class="digit">3</div>
+							<div class="digit">2</div>
+							<div class="digit">1</div>
+						</div>
+						<div class="row">
+							<div class="digitVacio"></div>
+							<div class="digit">0</div>
+							<div id="btn_ingresar">Ir</div>
+						</div>
+					</div>
+					<!-- <button id="btn_ingresar">Ingresar</button> -->
 				</div>
 			</div>
 		</div>
@@ -48,4 +62,5 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 <script src="./js/cliente.js"></script>
+
 </html>
