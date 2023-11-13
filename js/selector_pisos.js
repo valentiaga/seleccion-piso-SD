@@ -19,9 +19,7 @@ const server = http.createServer(function (request, response) {
 
   if (request.method == 'GET' && parsedUrl.at(-1) === 'acceso') {
 
-    // console.log('PISO: '+parsedUrl[2])
     request_data = { id: parsedUrl[1] }   
-    console.log("Acceso")
     solicita_datos(request_data)
       .then((resp) => {
         console.log('manda la data bien ' + resp)
@@ -52,14 +50,30 @@ function validar_permisos(request, datos) {
   }
 
 async function solicita_datos(request_data) {
-    let data = { id: request_data.id }
+    //solicita a el gestor de permisos la informacion del visitante
     let url = URL_PERMISOS + '/visitantes/' + request_data.id + '/info'
     console.log(url);
-    let datos = await send_request({ url: url, method: 'GET' });
-    console.log("solicita datos " + datos)
+    let respInfo = await send_request({ url: url, method: 'GET' });
+    let datos = respInfo.body
+    console.log("datos recibe un codigo de "+ respInfo.statusCode);
+
+    //solicita a el gestor de permisos los pisos a los que puede acceder el visitante
+    url = URL_PERMISOS + '/visitantes/' + request_data.id + '/permisos'
+    const respPermisos = await send_request({ url: url, method: 'GET' });
+    let permisos = respPermisos.body
+    console.log("permisos obtenidos " + permisos)
+    console.log("permisos recibe un codigo de "+ respPermisos.statusCode);
+
+    if ( respPermisos.statusCode == 200){
+      datos.pisos = permisos.pisos
+      console.log("entra aca " + permisos.pisos)
+    }
+    datos.statusCode = respPermisos.statusCode
+    console.log("despues de unir todo: " + JSON.stringify(datos)) 
+    
     return datos;
   }
-
+// Tiene que devolver el ascensor
 async function solicitar_acceso(request_data) {
     let url = URL_PERMISOS + '/visitantes/' + request_data.id + '/permisos'
     //que pasa si no el id no 
@@ -99,7 +113,9 @@ function send_request({ data, url, method } = {}) {
           response.on('end', () => {
             console.log("3)El selector recibe del mock " + body)
             body = JSON.parse(body);
-            resolve(body)
+            //estado = stringify(statusCode)
+            console.log("el selector recibe un codigo de " +response.statusCode)
+            resolve({"body":body, "statusCode":response.statusCode})
           });
         });
 

@@ -45,20 +45,24 @@ const server = http.createServer(function (request, response) {
   const parsedUrl =  request.url.slice(1).split('/')
 
   if (request.method=='GET' && parsedUrl.at(-1) === 'info') {
-     
     console.log("permisos recibe " + parsedUrl[1]);
     let mock = {
-        "pisos" : [1,5,7],  
         "id": "A001",
         "nombre": "Juan Pérez",
         "edad": 25,
-        "email": "juan.perez@example.com",
-        "code": 200
+        "email": "juan.perez@example.com"
+        // "code": 200
     }
-
-    // response.status = 200
-    // console.log("status"+ response.status)
+    response.writeHead(200)
     response.end(JSON.stringify(mock))
+
+}else if (request.method=='GET' && parsedUrl.at(-1) === 'permisos') {
+  console.log("permisos recibe " + parsedUrl[1]);
+  let mock = {
+      "pisos" : [1,5,7] 
+  }
+  response.writeHead(200)
+  response.end(JSON.stringify(mock))
 }})
 
 server.listen(9000, function () {
