@@ -93,7 +93,7 @@ function consulta_datos(){
     return
   }
  
-  const url = 'http://localhost:3000/visitantes/'+id+'/info'
+  const url = 'http://localhost:3000/visitantes/'+id+'/acceso'
   fetch(url)
     .then(response => {
       if (response.ok) {

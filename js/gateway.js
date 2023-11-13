@@ -18,9 +18,9 @@ const server = http.createServer(function (request, response) {
   if (request.method=='GET' && parsedUrl.at(-1) === 'acceso'){
     console.log('3 URL = '+ request.url);
     const id = parsedUrl[1]
-    const piso = parsedUrl[2] 
-    console.log('4) gateway received: ' + id +' y '+ piso)
-    const url = 'http://localhost:4000/visitantes/'+ id +'/'+ piso +'/acceso'
+    // const piso = parsedUrl[2] 
+    console.log('4) gateway received: ' + id)
+    const url = 'http://localhost:4000/visitantes/'+ id +'/acceso'
 
     send_request({url:url, method:'GET'})
     .then((rtaSelector) => {
@@ -33,7 +33,7 @@ const server = http.createServer(function (request, response) {
       console.log('3) Server received: ' + id)
       console.log('4) URL = '+ request.url)
 
-      const url = 'http://localhost:4000/visitantes/'+ id +'/info'
+      const url = 'http://localhost:4000/visitantes/'+ id +'/ascensor'
 
       send_request({url:url, method:'GET'})
       .then((rtaSelector) => {

@@ -34,20 +34,30 @@ const datos = `[
 const data = JSON.parse(datos);
 
 const server = http.createServer(function (request, response) {
+  response.setHeader('Access-Control-Allow-Origin', '*'); // Permitir todas las solicitudes
+  response.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  if (request.method === 'OPTIONS') {
+    response.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
+    return response.end();
+  }
+
   console.log('URL recibido '+request.url)
   const parsedUrl =  request.url.slice(1).split('/')
 
-  if (request.method=='GET' && parsedUrl.at(-1) === 'permisos') {
+  if (request.method=='GET' && parsedUrl.at(-1) === 'info') {
      
     console.log("permisos recibe " + parsedUrl[1]);
     let mock = {
-        "pisos" : [1,5,7],
+        "pisos" : [1,5,7],  
         "id": "A001",
         "nombre": "Juan Pérez",
         "edad": 25,
         "email": "juan.perez@example.com",
+        "code": 200
     }
-    response.statusCode = 200
+
+    // response.status = 200
+    // console.log("status"+ response.status)
     response.end(JSON.stringify(mock))
 }})
 
