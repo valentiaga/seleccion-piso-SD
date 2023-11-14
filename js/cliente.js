@@ -84,6 +84,7 @@ function alerta(text){
   }).showToast() 
 }
 
+/////
 function consulta_datos(){
   id = document.getElementById('input_id').value 
 
@@ -103,64 +104,44 @@ function consulta_datos(){
       }
     })
     .then(data => {
-      
-      console.log(data) 
-      
-      //Formateo los datos
-      const formattedData = `
-      <p><strong>ID:</strong> ${data.id}</p>
-      <p><strong>Nombre:</strong> ${data.nombre}</p>
-      <p><strong>Edad:</strong> ${data.edad}</p>
-      <p><strong>Email:</strong> ${data.email}</p>
-      <p><strong>Pisos Permitidos:</strong> ${data.pisos}</p>
-      ` 
 
-      //Creo pop up que muestre los pisos a los que puede acceder el visitante
-      Swal.fire({
-            title: 'DATOS VISITANTE',
-            icon: 'info',
-            html: formattedData,
-      })
+		  var authenticationContainer = document.querySelector('.authentication-container');
+
+		  var nuevoContenido = `
+        <h1>Datos Visitante</h1>
+        <p><strong>ID:</strong> ${data.id}</p>
+        <p><strong>Nombre:</strong> ${data.nombre}</p>
+        <p><strong>Edad:</strong> ${data.edad}</p>
+        <p><strong>Email:</strong> ${data.email}</p>
+        <p><strong>Pisos Permitidos:</strong> ${data.pisos}</p>
+        <button id="btn_volver">Volver</button>
+      `;
+		  authenticationContainer.innerHTML = nuevoContenido
+
+		  document.getElementById("btn_volver").style.display = "block";
+		  var btnVolver = document.getElementById("btn_volver");
+    	btnVolver.onclick = volverAAutenticacion;
       
-    })
-    .catch(error => {
-      console.error('Error:', error) 
-    }) 
-}
+      function volverAAutenticacion() {
 
-function consulta_pisos(){
-  id = document.getElementById('input_id').value 
-
-  if (id == '') {
-    // document.body.style.overflow = 'hidden' 
-    alerta("Ingrese ID") 
-    return
-  }
- 
-  const url = 'http://localhost:3000/visitantes/'+id+'/info'
-  fetch(url)
-    .then(response => {
-      if (response.ok) {
-        return response.json() 
-      } else {
-        throw new Error('Error en la solicitud') 
+        var authenticationContainer = document.querySelector('.authentication-container');
+    
+        var contenidoOriginal = `
+            <form action="#">
+                <h1>Autenticación</h1>
+                <span>Ingrese id o apoye tarjeta de identificación</span>
+                <input type="id" id="input_id" placeholder="Id" />
+                <button id="btn_consultarDatos">Datos</button>
+                <br>
+                <img class="logoRFID" src="./img/rfid.png" alt="">
+            </form>
+        `;
+    
+        authenticationContainer.innerHTML = contenidoOriginal;
+    
+        let btn_consultarDatos = document.getElementById('btn_consultarDatos') 
+        btn_consultarDatos.addEventListener('click', consulta_datos) 
       }
-    })
-    .then(data => {
-      
-      console.log(data) 
-      
-      //Formateo los datos
-      const formattedData = `
-      <p><strong>Pisos Permitidos:</strong> ${data.pisos}</p>
-      ` 
-
-      //Creo pop up que muestre los pisos a los que puede acceder el visitante
-      Swal.fire({
-            title: 'PISOS PERMITIDOS',
-            icon: 'info',
-            html: formattedData,
-      })
       
     })
     .catch(error => {
@@ -168,5 +149,46 @@ function consulta_pisos(){
     }) 
 }
 
+// ESTO SE PUEDE BORRAR, NO SE USA MAS
+// function consulta_pisos(){
+//   id = document.getElementById('input_id').value 
 
-init() 
+//   if (id == '') {
+//     // document.body.style.overflow = 'hidden' 
+//     alerta("Ingrese ID") 
+//     return
+//   }
+ 
+//   const url = 'http://localhost:3000/visitantes/'+id+'/info'
+//   fetch(url)
+//     .then(response => {
+//       if (response.ok) {
+//         return response.json() 
+//       } else {
+//         throw new Error('Error en la solicitud') 
+//       }
+//     })
+//     .then(data => {
+      
+//       console.log(data) 
+      
+//       //Formateo los datos
+//       const formattedData = `
+//       <p><strong>Pisos Permitidos:</strong> ${data.pisos}</p>
+//       ` 
+
+//       //Creo pop up que muestre los pisos a los que puede acceder el visitante
+//       Swal.fire({
+//             title: 'PISOS PERMITIDOS',
+//             icon: 'info',
+//             html: formattedData,
+//       })
+      
+//     })
+//     .catch(error => {
+//       console.error('Error:', error) 
+//     }) 
+// }
+
+
+init()
