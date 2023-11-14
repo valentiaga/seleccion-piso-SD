@@ -26,25 +26,25 @@ function init() {
   let btn_consultarDatos = document.getElementById('btn_consultarDatos') 
   btn_consultarDatos.addEventListener('click', consulta_datos) 
 
-  let btn_consultarPisos = document.getElementById('btn_consultarPisos') 
-  btn_consultarPisos.addEventListener('click', consulta_pisos) 
 }
 
 function solicitud_acceso() {  
   pisoElegido = document.querySelector('.inputSeleccion').value 
   id = document.getElementById('input_id').value 
-
-  if (pisoElegido == "") {
-    // document.body.style.overflow = 'hidden' 
-    alerta("Seleccione el piso al que desea ir") 
-    return
-  }
+  
   if (id == '') {
     // document.body.style.overflow = 'hidden' 
     alerta("Ingrese ID") 
     return
   }
-  const url = 'http://localhost:3000/visitantes/'+id+'/'+pisoElegido+'/acceso'
+  
+  if (pisoElegido == "") {
+    // document.body.style.overflow = 'hidden' 
+    alerta("Seleccione el piso al que desea ir") 
+    return
+  }
+  
+  const url = 'http://localhost:3000/visitantes/'+id+'/'+pisoElegido+'/ascensor'
 
   console.log('URL:', url) 
   fetch(url,
@@ -56,7 +56,6 @@ function solicitud_acceso() {
     })
     .then(response => {
       if (response.ok) {
-        // console.log('ok '+ response.status) 
         return response.json() 
       } else {
         throw new Error('error en la solicitud') //aca habria que poner un alerta?
@@ -64,6 +63,7 @@ function solicitud_acceso() {
     })
     .then(data => {
       console.log('Respuesta del servidor:', data) 
+      
       if (data.code == 200)
         alerta ("Dirijase al ascensor: "+ data.ascensor.nombre)
       else if (data.code == 403)
@@ -94,7 +94,7 @@ function consulta_datos(){
     return
   }
  
-  const url = 'http://localhost:3000/visitantes/'+id+'/acceso'
+  const url = 'http://localhost:3000/visitantes/'+id+'/info'
   fetch(url)
     .then(response => {
       if (response.ok) {
