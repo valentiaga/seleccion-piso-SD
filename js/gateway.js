@@ -3,43 +3,87 @@ const http = require('http');
 const path = require('path');
 const { send } = require('process');
 
-const server = http.createServer(function (request, response) {
+const server = http.createServer(function (req, res) {
 
-  response.setHeader('Access-Control-Allow-Origin', '*'); // Permitir todas las solicitudes
-  response.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-  if (request.method === 'OPTIONS') {
-    response.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
-    return response.end();
+  res.setHeader('Access-Control-Allow-Origin', '*'); // Permitir todas las solicitudes
+  res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  if (req.method === 'OPTIONS') {
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
+    return res.end();
   }
 
-  console.log('URL recibido '+request.url)
-  const parsedUrl =  request.url.slice(1).split('/')
+  console.log('URL recibido '+req.url)
+  const parsedUrl =  req.url.slice(1).split('/')
 
-  if (request.method=='GET' && parsedUrl.at(-1) === 'acceso'){
-    console.log('3 URL = '+ request.url);
+  if (req.method=='GET' && parsedUrl.at(-1) === 'acceso'){
+    console.log('3 URL = '+ req.url);
     const id = parsedUrl[1]
     // const piso = parsedUrl[2] 
     console.log('4) gateway received: ' + id)
     const url = 'http://localhost:4000/visitantes/'+ id +'/acceso'
 
+    const request = http.request(url, { method: req.method },
+      function (response) {
+        let body = ''
+        console.log('entra 2')
+        response.on('data', (chunk) => {
+          body += chunk;
+        });
+  
+        response.on('end', () => {
+          console.log("El gateway recibe " + body)
+          request.end()
+          res.end(body); 
+        });
+        
+      });
+
+    if( req.method != 'GET'){
+      console.log("El gateway envia" + data)
+      request.write(data);   
+    }
+
+    request.end()
+  
+
+    /*
     send_request({url:url, method:'GET'})
     .then((rtaSelector) => {
       console.log("Respuesta selector: " +rtaSelector);
       response.end(rtaSelector);
-    })
+    })*/
 
-  } else if (request.method=='GET' && parsedUrl.at(-1) === 'info'){
+  } else if (req.method=='GET' && parsedUrl.at(-1) === 'info'){
       const id = parsedUrl[1]
       console.log('3) Server received: ' + id)
-      console.log('4) URL = '+ request.url)
+      console.log('4) URL = '+ req.url)
 
       const url = 'http://localhost:4000/visitantes/'+ id +'/ascensor'
 
-      send_request({url:url, method:'GET'})
-      .then((rtaSelector) => {
-        console.log("Respuesta selector: " +rtaSelector);
-        response.end(rtaSelector);
-      })
+    const request = http.request(url, { method: req.method },
+      function (response) {
+        let body = ''
+        console.log('entra 2')
+        response.on('data', (chunk) => {
+          body += chunk;
+        });
+  
+        response.on('end', () => {
+          console.log("El gateway recibe " + body)
+          request.end()
+          res.end(body); 
+        });
+        
+      });
+
+    if( req.method != 'GET'){
+      console.log("El gateway envia" + data)
+      request.write(data);   
+    }
+
+    request.end()
+  
+
       //habria que agregarle un catch por si tiene un error y que devuelva un codigo de error
   }
   
@@ -49,7 +93,7 @@ server.listen(3000, function() {
   console.log('1) Server started');
 });
 
-
+/*
 function send_request({url, method, data}={}) {
   console.log('entra 1')
   return new Promise((resolve,reject)=>{
@@ -73,3 +117,4 @@ function send_request({url, method, data}={}) {
     request.end();
   })
 }
+*/
