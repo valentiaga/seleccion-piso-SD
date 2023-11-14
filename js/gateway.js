@@ -2,6 +2,7 @@ const { log } = require('console');
 const http = require('http');
 const path = require('path');
 const { send } = require('process');
+const URL_SELECTOR = 'http://localhost:4000'
 
 const server = http.createServer(function (req, res) {
 
@@ -16,59 +17,25 @@ const server = http.createServer(function (req, res) {
   const parsedUrl =  req.url.slice(1).split('/')
 
   if (req.method=='GET' && parsedUrl.at(-1) === 'acceso'){
-
-    // request_data = { id: parsedUrl[1] } 
-    // acceder(request_data)
-    // .then((resp) => {
-    //   let respuesta = resp[0]
-    //   let status = resp[1]
+    console.log("entra a gatoway");
+    request_data = { id: parsedUrl[1] } 
+    acceder(request_data)
+    .then((resp) => {
+      let respuesta = resp[0]
+      let status = resp[1]
       
-    //   console.log('manda la data bien ' + respuesta)
-    //   console.log('status '+ status)
+      console.log('manda la data bien ' + respuesta)
+      console.log('status '+ status)
       
-    //   response.statusCode = status
-    //   response.end(JSON.stringify(respuesta))
-    // })
-    // .catch((error) => {
-    //   console.log("Error " + error.status)
-    //   response.statusCode = error.status
-    //   response.end('Error')
-    // })
-
-    console.log('3 URL = '+ req.url);
-    const id = parsedUrl[1]
-    // const piso = parsedUrl[2] 
-    console.log('4) gateway received: ' + id)
-    const url = 'http://localhost:4000/visitantes/'+ id +'/acceso'
-
-    const request = http.request(url, { method: req.method },
-      function (response) {
-        let body = ''
-        console.log('entra 2')
-        response.on('data', (chunk) => {
-          body += chunk;
-        });
-  
-        response.on('end', () => {
-          console.log("El gateway recibe " + body)
-          request.end()
-          res.end(body); 
-        });
-        
-      });
-
-    if( req.method != 'GET'){
-      console.log("El gateway envia" + data)
-      request.write(data);   
-    }
-
-    request.end()
-  
-    // send_request({url:url, method:'GET'})
-    // .then((rtaSelector) => {
-    //   console.log("Respuesta selector: " +rtaSelector);
-    //   response.end(rtaSelector); 
-    // })
+      res.statusCode = status
+      res.end(JSON.stringify(respuesta))
+    })
+    .catch((error) => {
+      console.log("Error " + error.message)
+      res.statusCode = error.status
+      // res.statusCode = error.status
+      res.end('Error ' + error.status)
+    })
 
   } else if (req.method=='GET' && parsedUrl.at(-1) === 'info'){
       const id = parsedUrl[1]
@@ -110,36 +77,26 @@ server.listen(3000, function() {
   console.log('1) Server started');
 });
 
-async function acceder (){
-  let url = URL_PERMISOS + '/visitantes/' + request_data.id + '/info'
-    console.log(url);
-    let respInfo = await send_request({ url: url, method: 'GET' });
-    let datos = respInfo.body
-    console.log("datos recibe un codigo de "+ respInfo.statusCode);
+async function acceder (request_data){
+  
+  console.log('Entra a Acceder')
+  let url = URL_SELECTOR + '/visitantes/' + request_data.id + '/acceso'
 
-    //solicita a el gestor de permisos los pisos a los que puede acceder el visitante
-    url = URL_PERMISOS + '/visitantes/' + request_data.id + '/permisos'
-    const respPermisos = await send_request({ url: url, method: 'GET' });
-    let permisos = respPermisos.body
-    console.log("permisos obtenidos " + permisos)
-    console.log("permisos recibe un codigo de "+ respPermisos.statusCode);
+  let respInfo = await send_request({ url: url, method: 'GET' })
+  let datos = respInfo.body
+  console.log("Acceder recibe"+ respInfo.statusCode)
 
-    if ( respPermisos.statusCode == 200 && respInfo.statusCode == 200){
-      datos.pisos = permisos.pisos
-      console.log("entra aca " + permisos.pisos)
+    if (respInfo.statusCode != 200){
+      throw new Error_request(respInfo.statusCode)
     }
-    else {
-      if(respPermisos.statusCode != 200)
-        throw new Error_request(respPermisos.statusCode)
-      else  if (respInfo.statusCode != 200)
-              throw new Error_request(respInfo.statusCode)
-    }
-    let status = respPermisos.statusCode
-    console.log("despues de unir todo: " + JSON.stringify(datos)) 
+    let status = respInfo.statusCode
+    console.log("Acceder recibe: " + JSON.stringify(datos)) 
     
     return [datos, status];
 }
+
 function send_request({ data, url, method } = {}) {
+  console.log("send")
   return new Promise((resolve, reject) => {
     const request = http.request(url, { method: method },
       function (response) {
@@ -150,10 +107,10 @@ function send_request({ data, url, method } = {}) {
         });
 
         response.on('end', () => {
-          console.log("3)El selector recibe del mock " + body)
+          console.log("Send request recibe del mock " + body)
           body = JSON.parse(body);
           //estado = stringify(statusCode)
-          console.log("el selector recibe un codigo de " +response.statusCode)
+          // console.log("el selector recibe un codigo de " +response.statusCode)
           resolve({"body":body, "statusCode":response.statusCode})
         });
       });
@@ -190,3 +147,10 @@ function send_request({ data, url, method } = {}) {
 //     request.end();
 //   })
 // }
+
+class Error_request extends Error {
+  constructor(status) {
+      super(mensaje);
+      this.status = status;
+  }
+}

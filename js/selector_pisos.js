@@ -34,7 +34,7 @@ const server = http.createServer(function (request, response) {
       .catch((error) => {
         console.log("Error " + error.status)
         response.statusCode = error.status
-        response.end('Error en el servidor')
+        response.end('Error')
       })
 
   } else if (request.method == 'GET' && parsedUrl.at(-1) === 'ascensor') {
