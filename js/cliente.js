@@ -108,6 +108,7 @@ function consulta_datos(){
 		  var authenticationContainer = document.querySelector('.authentication-container');
 
 		  var nuevoContenido = `
+        <div id="datos-visitante">
         <h1>Datos Visitante</h1>
         <p><strong>ID:</strong> ${data.id}</p>
         <p><strong>Nombre:</strong> ${data.nombre}</p>
@@ -115,6 +116,7 @@ function consulta_datos(){
         <p><strong>Email:</strong> ${data.email}</p>
         <p><strong>Pisos Permitidos:</strong> ${data.pisos}</p>
         <button id="btn_volver">Volver</button>
+        </div>
       `;
 		  authenticationContainer.innerHTML = nuevoContenido
 
@@ -139,7 +141,8 @@ function consulta_datos(){
     
         authenticationContainer.innerHTML = contenidoOriginal;
     
-        let btn_consultarDatos = document.getElementById('btn_consultarDatos') 
+        //Arreglar esto
+        btn_consultarDatos = document.getElementById('btn_consultarDatos') 
         btn_consultarDatos.addEventListener('click', consulta_datos) 
       }
       
@@ -148,47 +151,5 @@ function consulta_datos(){
       console.error('Error:', error) 
     }) 
 }
-
-// ESTO SE PUEDE BORRAR, NO SE USA MAS
-// function consulta_pisos(){
-//   id = document.getElementById('input_id').value 
-
-//   if (id == '') {
-//     // document.body.style.overflow = 'hidden' 
-//     alerta("Ingrese ID") 
-//     return
-//   }
- 
-//   const url = 'http://localhost:3000/visitantes/'+id+'/info'
-//   fetch(url)
-//     .then(response => {
-//       if (response.ok) {
-//         return response.json() 
-//       } else {
-//         throw new Error('Error en la solicitud') 
-//       }
-//     })
-//     .then(data => {
-      
-//       console.log(data) 
-      
-//       //Formateo los datos
-//       const formattedData = `
-//       <p><strong>Pisos Permitidos:</strong> ${data.pisos}</p>
-//       ` 
-
-//       //Creo pop up que muestre los pisos a los que puede acceder el visitante
-//       Swal.fire({
-//             title: 'PISOS PERMITIDOS',
-//             icon: 'info',
-//             html: formattedData,
-//       })
-      
-//     })
-//     .catch(error => {
-//       console.error('Error:', error) 
-//     }) 
-// }
-
 
 init()

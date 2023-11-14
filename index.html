@@ -60,54 +60,6 @@
 
 </body>
 
-<script> 
-/* ESTO ESTA EN CLIENTE
-	let button = document.getElementById("btn_consultarDatos")
-	button.onclick = muestraDatos
-
-	function muestraDatos(){
-		var inputId = document.getElementById("input_id").value;
-
-		if (inputId == ''){
-		}else{
-
-		var authenticationContainer = document.querySelector('.authentication-container');
-
-		var nuevoContenido = `
-        <h1>Datos Consultados</h1>
-        <p>Se consultaron datos para el ID: ${inputId}</p>
-        <button id="btn_volver">Volver</button>
-    `;
-		authenticationContainer.innerHTML = nuevoContenido
-
-		document.getElementById("btn_volver").style.display = "block";
-		var btnVolver = document.getElementById("btn_volver");
-    	btnVolver.onclick = volverAAutenticacion;
-		}
-	}
-
-	function volverAAutenticacion() {
-
-    var authenticationContainer = document.querySelector('.authentication-container');
-
-    var contenidoOriginal = `
-        <form action="#">
-            <h1>Autenticación</h1>
-            <span>Ingrese id o apoye tarjeta de identificación</span>
-            <input type="id" id="input_id" placeholder="Id" />
-            <button id="btn_consultarDatos">Datos</button>
-            <br>
-            <img class="logoRFID" src="./img/rfid.png" alt="">
-        </form>
-    `;
-
-    authenticationContainer.innerHTML = contenidoOriginal;
-
-    let button = document.getElementById("btn_consultarDatos");
-    button.onclick = muestraDatos;
-	}
-*/
-</script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 <script src="./js/cliente.js"></script>
