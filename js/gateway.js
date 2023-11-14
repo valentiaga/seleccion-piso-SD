@@ -1,8 +1,21 @@
 const { log } = require('console');
 const http = require('http');
 const path = require('path');
+const mqtt = require("mqtt");
 const { send } = require('process');
 const URL_SELECTOR = 'http://localhost:4000'
+
+const client = mqtt.connect("mqtt://test.mosquitto.org");
+
+client.on("connect", () => {
+  client.subscribe("/ssdd2023/visitante/", (err) => {
+    console.log(err, 'suscripto!')
+  });
+});
+
+client.on("message", (topic, message) => {
+  console.log(message.toString())
+});
 
 const server = http.createServer(function (req, res) {
 
