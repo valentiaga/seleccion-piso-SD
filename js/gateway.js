@@ -17,42 +17,58 @@ const server = http.createServer(function (req, res) {
 
   if (req.method=='GET' && parsedUrl.at(-1) === 'acceso'){
 
-    // console.log('3 URL = '+ req.url);
-    // const id = parsedUrl[1]
-    // // const piso = parsedUrl[2] 
-    // console.log('4) gateway received: ' + id)
-    // const url = 'http://localhost:4000/visitantes/'+ id +'/acceso'
+    // request_data = { id: parsedUrl[1] } 
+    // acceder(request_data)
+    // .then((resp) => {
+    //   let respuesta = resp[0]
+    //   let status = resp[1]
+      
+    //   console.log('manda la data bien ' + respuesta)
+    //   console.log('status '+ status)
+      
+    //   response.statusCode = status
+    //   response.end(JSON.stringify(respuesta))
+    // })
+    // .catch((error) => {
+    //   console.log("Error " + error.status)
+    //   response.statusCode = error.status
+    //   response.end('Error')
+    // })
 
-    // const request = http.request(url, { method: req.method },
-    //   function (response) {
-    //     let body = ''
-    //     console.log('entra 2')
-    //     response.on('data', (chunk) => {
-    //       body += chunk;
-    //     });
+    console.log('3 URL = '+ req.url);
+    const id = parsedUrl[1]
+    // const piso = parsedUrl[2] 
+    console.log('4) gateway received: ' + id)
+    const url = 'http://localhost:4000/visitantes/'+ id +'/acceso'
+
+    const request = http.request(url, { method: req.method },
+      function (response) {
+        let body = ''
+        console.log('entra 2')
+        response.on('data', (chunk) => {
+          body += chunk;
+        });
   
-    //     response.on('end', () => {
-    //       console.log("El gateway recibe " + body)
-    //       request.end()
-    //       res.end(body); 
-    //     });
+        response.on('end', () => {
+          console.log("El gateway recibe " + body)
+          request.end()
+          res.end(body); 
+        });
         
-    //   });
+      });
 
-    // if( req.method != 'GET'){
-    //   console.log("El gateway envia" + data)
-    //   request.write(data);   
-    // }
+    if( req.method != 'GET'){
+      console.log("El gateway envia" + data)
+      request.write(data);   
+    }
 
-    // request.end()
+    request.end()
   
-
-    
-    send_request({url:url, method:'GET'})
-    .then((rtaSelector) => {
-      console.log("Respuesta selector: " +rtaSelector);
-      response.end(rtaSelector);
-    })
+    // send_request({url:url, method:'GET'})
+    // .then((rtaSelector) => {
+    //   console.log("Respuesta selector: " +rtaSelector);
+    //   response.end(rtaSelector); 
+    // })
 
   } else if (req.method=='GET' && parsedUrl.at(-1) === 'info'){
       const id = parsedUrl[1]
@@ -94,28 +110,83 @@ server.listen(3000, function() {
   console.log('1) Server started');
 });
 
-/*
-function send_request({url, method, data}={}) {
-  console.log('entra 1')
-  return new Promise((resolve,reject)=>{
+async function acceder (){
+  let url = URL_PERMISOS + '/visitantes/' + request_data.id + '/info'
+    console.log(url);
+    let respInfo = await send_request({ url: url, method: 'GET' });
+    let datos = respInfo.body
+    console.log("datos recibe un codigo de "+ respInfo.statusCode);
+
+    //solicita a el gestor de permisos los pisos a los que puede acceder el visitante
+    url = URL_PERMISOS + '/visitantes/' + request_data.id + '/permisos'
+    const respPermisos = await send_request({ url: url, method: 'GET' });
+    let permisos = respPermisos.body
+    console.log("permisos obtenidos " + permisos)
+    console.log("permisos recibe un codigo de "+ respPermisos.statusCode);
+
+    if ( respPermisos.statusCode == 200 && respInfo.statusCode == 200){
+      datos.pisos = permisos.pisos
+      console.log("entra aca " + permisos.pisos)
+    }
+    else {
+      if(respPermisos.statusCode != 200)
+        throw new Error_request(respPermisos.statusCode)
+      else  if (respInfo.statusCode != 200)
+              throw new Error_request(respInfo.statusCode)
+    }
+    let status = respPermisos.statusCode
+    console.log("despues de unir todo: " + JSON.stringify(datos)) 
+    
+    return [datos, status];
+}
+function send_request({ data, url, method } = {}) {
+  return new Promise((resolve, reject) => {
     const request = http.request(url, { method: method },
       function (response) {
+        console.log("Send request")
         let body = ''
         response.on('data', (chunk) => {
           body += chunk;
         });
-  
+
         response.on('end', () => {
-          console.log("El gateway recibe " + body)
-          resolve(body)
+          console.log("3)El selector recibe del mock " + body)
+          body = JSON.parse(body);
+          //estado = stringify(statusCode)
+          console.log("el selector recibe un codigo de " +response.statusCode)
+          resolve({"body":body, "statusCode":response.statusCode})
         });
       });
-    if( method != 'GET'){
-      console.log("El gateway envia" + data)
-      request.write(data);   
+
+    if (method != 'GET') {
+      data = JSON.stringify(data);
+      console.log("2) " + data)
+      request.write(data);
     }
-    console.log('entra 2')
     request.end();
   })
 }
-*/
+
+// function send_request({url, method, data}={}) {
+//   console.log('entra 1')
+//   return new Promise((resolve,reject)=>{
+//     const request = http.request(url, { method: method },
+//       function (response) {
+//         let body = ''
+//         response.on('data', (chunk) => {
+//           body += chunk;
+//         });
+  
+//         response.on('end', () => {
+//           console.log("El gateway recibe " + body)
+//           resolve(body)
+//         });
+//       });
+//     if( method != 'GET'){
+//       console.log("El gateway envia" + data)
+//       request.write(data);   
+//     }
+//     console.log('entra 2')
+//     request.end();
+//   })
+// }
