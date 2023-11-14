@@ -22,11 +22,18 @@ const server = http.createServer(function (request, response) {
     request_data = { id: parsedUrl[1] }   
     solicita_datos(request_data)
       .then((resp) => {
-        console.log('manda la data bien ' + resp)
-        response.end(JSON.stringify(resp))
+        let respuesta = resp[0]
+        let status = resp[1]
+        
+        console.log('manda la data bien ' + respuesta)
+        console.log('status '+ status)
+        
+        response.statusCode = status
+        response.end(JSON.stringify(respuesta))
       })
       .catch((error) => {
-        response.statusCode = 500
+        console.log("Error " + error.status)
+        response.statusCode = error.status
         response.end('Error en el servidor')
       })
 
@@ -64,40 +71,20 @@ async function solicita_datos(request_data) {
     console.log("permisos obtenidos " + permisos)
     console.log("permisos recibe un codigo de "+ respPermisos.statusCode);
 
-    if ( respPermisos.statusCode == 200){
+    if ( respPermisos.statusCode == 200 && respInfo.statusCode == 200){
       datos.pisos = permisos.pisos
       console.log("entra aca " + permisos.pisos)
     }
-    datos.statusCode = respPermisos.statusCode
+    else {
+      if(respPermisos.statusCode != 200)
+        throw new Error_request(respPermisos.statusCode)
+      else  if (respInfo.statusCode != 200)
+              throw new Error_request(respInfo.statusCode)
+    }
+    let status = respPermisos.statusCode
     console.log("despues de unir todo: " + JSON.stringify(datos)) 
     
-    return datos;
-  }
-// Tiene que devolver el ascensor
-async function solicitar_acceso(request_data) {
-    let url = URL_PERMISOS + '/visitantes/' + request_data.id + '/permisos'
-    //que pasa si no el id no 
-    let permisos = await send_request({ url: url, method: 'GET' });
-    console.log('PERMISOS ', permisos)
-    console.log('DATA SOLICITADA ' + request_data.piso)
-
-    if (validar_permisos(request_data, permisos)) { // enviamos solicitud ascensor
-      url = URL_ASCENSOR + '/api/selectorAscensor'
-      let asc = await send_request({ data: { piso_origen: 0, piso_destino: request_data.piso }, url: url, method: 'POST' })
-      console.log("ASCENSOR :" + asc.nombre);
-      respuesta = {
-        code: 200,
-        ascensor: asc
-      }
-      // respuesta.ascensor = JSON.parse(respuesta.ascensor)
-    } else {
-      respuesta = {
-        code: 403,
-        ascensor: ""
-      }
-    }
-    // console.log("solicitar_acceso respuesta :" + respuesta.ascensor);
-    return respuesta
+    return [datos, status];
   }
 
 function send_request({ data, url, method } = {}) {
@@ -131,3 +118,37 @@ function send_request({ data, url, method } = {}) {
   server.listen(4000, function () {
     console.log('Selector server started');
   })
+
+  // Tiene que devolver el ascensor
+async function solicitar_acceso(request_data) {
+  let url = URL_PERMISOS + '/visitantes/' + request_data.id + '/permisos'
+  //que pasa si no el id no 
+  let permisos = await send_request({ url: url, method: 'GET' });
+  console.log('PERMISOS ', permisos)
+  console.log('DATA SOLICITADA ' + request_data.piso)
+
+  if (validar_permisos(request_data, permisos)) { // enviamos solicitud ascensor
+    url = URL_ASCENSOR + '/api/selectorAscensor'
+    let asc = await send_request({ data: { piso_origen: 0, piso_destino: request_data.piso }, url: url, method: 'POST' })
+    console.log("ASCENSOR :" + asc.nombre);
+    respuesta = {
+      code: 200,
+      ascensor: asc
+    }
+    // respuesta.ascensor = JSON.parse(respuesta.ascensor)
+  } else {
+    respuesta = {
+      code: 403,
+      ascensor: ""
+    }
+  }
+  // console.log("solicitar_acceso respuesta :" + respuesta.ascensor);
+  return respuesta
+}
+
+class Error_request extends Error {
+  constructor(status) {
+      super(mensaje);
+      this.status = status;
+  }
+}

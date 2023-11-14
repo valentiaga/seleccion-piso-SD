@@ -16,42 +16,43 @@ const server = http.createServer(function (req, res) {
   const parsedUrl =  req.url.slice(1).split('/')
 
   if (req.method=='GET' && parsedUrl.at(-1) === 'acceso'){
-    console.log('3 URL = '+ req.url);
-    const id = parsedUrl[1]
-    // const piso = parsedUrl[2] 
-    console.log('4) gateway received: ' + id)
-    const url = 'http://localhost:4000/visitantes/'+ id +'/acceso'
 
-    const request = http.request(url, { method: req.method },
-      function (response) {
-        let body = ''
-        console.log('entra 2')
-        response.on('data', (chunk) => {
-          body += chunk;
-        });
+    // console.log('3 URL = '+ req.url);
+    // const id = parsedUrl[1]
+    // // const piso = parsedUrl[2] 
+    // console.log('4) gateway received: ' + id)
+    // const url = 'http://localhost:4000/visitantes/'+ id +'/acceso'
+
+    // const request = http.request(url, { method: req.method },
+    //   function (response) {
+    //     let body = ''
+    //     console.log('entra 2')
+    //     response.on('data', (chunk) => {
+    //       body += chunk;
+    //     });
   
-        response.on('end', () => {
-          console.log("El gateway recibe " + body)
-          request.end()
-          res.end(body); 
-        });
+    //     response.on('end', () => {
+    //       console.log("El gateway recibe " + body)
+    //       request.end()
+    //       res.end(body); 
+    //     });
         
-      });
+    //   });
 
-    if( req.method != 'GET'){
-      console.log("El gateway envia" + data)
-      request.write(data);   
-    }
+    // if( req.method != 'GET'){
+    //   console.log("El gateway envia" + data)
+    //   request.write(data);   
+    // }
 
-    request.end()
+    // request.end()
   
 
-    /*
+    
     send_request({url:url, method:'GET'})
     .then((rtaSelector) => {
       console.log("Respuesta selector: " +rtaSelector);
       response.end(rtaSelector);
-    })*/
+    })
 
   } else if (req.method=='GET' && parsedUrl.at(-1) === 'info'){
       const id = parsedUrl[1]
