@@ -78,7 +78,8 @@ const server = http.createServer(function (req, res) {
       res.end(JSON.stringify(respuesta))
     })
     .catch((error) => {
-      console.log("Error " + error.message)
+      console.log(typeof error);
+      console.log("Error " + error.status)
       res.statusCode = error.status
       res.end('Error ' + error.status)
     })
@@ -112,12 +113,14 @@ async function solicita_ascensor(request_data) {
   let url = URL_SELECTOR + '/visitantes/' + request_data.id + '/'+ request_data.piso+'/ascensor'
 
   let respInfo = await send_request({ url: url, method: 'GET' })
+  if (respInfo.statusCode != 200) {
+    // console.log(respInfo.statusCode);
+    let e = new Error_request(respInfo.statusCode)
+    console.log(e.status);
+    throw e
+  }
   let datos = respInfo.body
   console.log("Acceder recibe" + respInfo.statusCode)
-
-  if (respInfo.statusCode != 200) {
-    throw new Error_request(respInfo.statusCode)
-  }
   let status = respInfo.statusCode
   console.log("Acceder recibe: " + JSON.stringify(datos))
 
@@ -155,7 +158,8 @@ function send_request({ data, url, method } = {}) {
 }
 class Error_request extends Error {
   constructor(status) {
-    super(mensaje);
+    super(`Error en la solicitud con código de estado: ${status}`);
     this.status = status;
+    console.log('creado error con status'+this.status);
   }
 }

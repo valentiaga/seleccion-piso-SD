@@ -58,6 +58,15 @@ const server = http.createServer(function (request, response) {
               response.statusCode = respAsc[1]
               response.end(JSON.stringify(respAsc[0]))
             })
+            .catch((error) => {
+              console.log('hubo un errorr'+error.status);
+              throw new Error_request(error.status)
+            })
+        }
+        else{
+          console.log("Entro acaaaaaa");
+          response.statusCode = 400
+          response.end('{}')
         }
       })
       .catch((error) => {
@@ -95,8 +104,10 @@ async function solicita_permisos(request_data) {
     console.log("Solicito permisos " + permisos.body.pisos)
   }
   else {
-    if (permisos.statusCode != 200)
+    if (permisos.statusCode != 200){
       throw new Error_request(permisos.statusCode)
+
+    }
   }
 
   return [permisos.body, permisos.statusCode];
