@@ -13,21 +13,24 @@ client.on("connect", () => {
   });
 });
 
-client.on("message", (topic, message) => {
-  acceder(request_data)
-      .then((resp) => {
-        let respuesta = resp[0]
-        let status = resp[1]
-        res.statusCode = status
-        res.end(JSON.stringify(respuesta))
-      })
-      .catch((error) => {
-        console.log("Error " + error.message)
-        res.statusCode = error.status
-        res.end('Error ' + error.status)
-      })
+// client.on("message", (topic, message) => {
 
-});
+//   console.log(message.toString())
+
+  // acceder(request_data)
+  //     .then((resp) => {
+  //       let respuesta = resp[0]
+  //       let status = resp[1]
+  //       res.statusCode = status
+  //       res.end(JSON.stringify(respuesta))
+  //     })
+  //     .catch((error) => {
+  //       console.log("Error " + error.message)
+  //       res.statusCode = error.status
+  //       res.end('Error ' + error.status)
+  //     })
+
+// });
 
 const server = http.createServer(function (req, res) {
 
@@ -84,7 +87,32 @@ const server = http.createServer(function (req, res) {
       res.end('Error ' + error.status)
     })
 
-  }});
+  }else if (req.method == 'GET' && parsedUrl.at(-1) === 'conectar'){
+    console.log("Cliente se conecta con GW")
+
+    client.on("message", (topic, message) => {
+      console.log(message.toString())
+      const msg = { id: message.toString()}
+      res.statusCode = 200
+      res.end(JSON.stringify(msg))
+
+      
+      // acceder(request_data)
+      //     .then((resp) => {
+      //       let respuesta = resp[0]
+      //       let status = resp[1]
+      //       res.statusCode = status
+      //       res.end(JSON.stringify(respuesta))
+      //     })
+      //     .catch((error) => {
+      //       console.log("Error " + error.message)
+      //       res.statusCode = error.status
+      //       res.end('Error ' + error.status)
+      //     })
+    
+    });
+  }
+  });
 
 server.listen(3000, function () {
   console.log('1) Server started');

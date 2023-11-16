@@ -26,11 +26,37 @@ function init() {
   let btn_consultarDatos = document.getElementById('btn_consultarDatos')
   btn_consultarDatos.addEventListener('click', consulta_datos)
 
+  escucha_gw()
 }
 
+async function escucha_gw(){
+  let url = 'http://localhost:3000/conectar'
+    console.log('conectando con gw')
+    fetch(url,
+      {
+        method: 'GET'
+      }
+      )
+      .then((response) => {
+        if (response.ok) {
+          return response.json()
+        } else {
+          throw new Error('Error en la solicitud')
+        }
+      })
+      .then(data => {
+        alerta(data.id)
+        escucha_gw()
+        // muestraDatos(data)
+      })
+      .catch(error => {
+        console.error('Error:', error)
+      })
+}
 function solicitud_acceso() {
   pisoElegido = document.querySelector('.inputSeleccion').value
-  id = document.getElementById('input_id').value
+  if (id == -1)
+    id = document.getElementById('input_id').value
 
   if (id == '') {
     // document.body.style.overflow = 'hidden' 
@@ -107,8 +133,15 @@ function consulta_datos() {
       }
     })
     .then(data => {
+      muestraDatos(data)
+    })
+    .catch(error => {
+      console.error('Error:', error)
+    })
+}
 
-      var authenticationContainer = document.querySelector('.authentication-container');
+function muestraDatos(data){
+  var authenticationContainer = document.querySelector('.authentication-container');
 
       var nuevoContenido = `
         <div id="datos-visitante">
@@ -148,11 +181,6 @@ function consulta_datos() {
         btn_consultarDatos = document.getElementById('btn_consultarDatos')
         btn_consultarDatos.addEventListener('click', consulta_datos)
       }
-
-    })
-    .catch(error => {
-      console.error('Error:', error)
-    })
 }
 
 init()
