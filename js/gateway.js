@@ -93,23 +93,22 @@ const server = http.createServer(function (req, res) {
     client.on("message", (topic, message) => {
       console.log(message.toString())
       const msg = { id: message.toString()}
-      res.statusCode = 200
-      res.end(JSON.stringify(msg))
+      // res.statusCode = 200
+      // res.end(JSON.stringify(msg))
 
-      
-      // acceder(request_data)
-      //     .then((resp) => {
-      //       let respuesta = resp[0]
-      //       let status = resp[1]
-      //       res.statusCode = status
-      //       res.end(JSON.stringify(respuesta))
-      //     })
-      //     .catch((error) => {
-      //       console.log("Error " + error.message)
-      //       res.statusCode = error.status
-      //       res.end('Error ' + error.status)
-      //     })
-    
+
+      acceder(msg)
+          .then((resp) => {
+            let respuesta = resp[0]
+            let status = resp[1]
+            res.statusCode = status
+            res.end(JSON.stringify(respuesta))
+          })
+          .catch((error) => {
+            console.log("Error " + error.message)
+            res.statusCode = error.status
+            res.end('Error ' + error.status)
+          })
     });
   }
   });

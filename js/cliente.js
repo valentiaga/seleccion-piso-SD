@@ -45,9 +45,8 @@ async function escucha_gw(){
         }
       })
       .then(data => {
-        alerta(data.id)
+        muestraDatos(data)
         escucha_gw()
-        // muestraDatos(data)
       })
       .catch(error => {
         console.error('Error:', error)
@@ -141,6 +140,7 @@ function consulta_datos() {
 }
 
 function muestraDatos(data){
+  id = data.id
   var authenticationContainer = document.querySelector('.authentication-container');
 
       var nuevoContenido = `
