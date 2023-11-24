@@ -31,7 +31,7 @@ function init() {
 }
 
 async function escucha_gw(){
-  let url = `http://localhost:${puerto_selector}/conectar`
+  let url = `http://localhost:${puerto_gateway}/conectar`
     console.log('conectando con gw')
     fetch(url,
       {
@@ -113,7 +113,6 @@ function alerta(text) {
   }).showToast()
 }
 
-/////
 function consulta_datos() {
   id = document.getElementById('input_id').value
 
@@ -129,14 +128,18 @@ function consulta_datos() {
       if (response.ok) {
         return response.json()
       } else {
-        throw new Error('Error en la solicitud')
+        // console.log(response.status)
+        throw new Error_request(response.status)
       }
     })
     .then(data => {
       muestraDatos(data)
     })
-    .catch(error => {
-      console.error('Error:', error)
+    .catch(error=> {
+      if (error.status == 400)
+        alerta("ID Invalido")
+      else
+        alerta("No es posible ejecutar su solicitud. Reintente mas tarde")
     })
 }
 
@@ -182,6 +185,13 @@ function muestraDatos(data){
         btn_consultarDatos = document.getElementById('btn_consultarDatos')
         btn_consultarDatos.addEventListener('click', consulta_datos)
       }
+}
+
+class Error_request extends Error {
+  constructor(status) {
+    super(`Error en la solicitud con código de estado: ${status}`);
+    this.status = status;
+  }
 }
 
 init()

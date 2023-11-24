@@ -13,7 +13,7 @@ const client = mqtt.connect("mqtt://test.mosquitto.org");
 
 client.on("connect", () => {
   client.subscribe("/ssdd2023/visitante/", (err) => {
-    if (err==null)
+    if (err=='null')
       console.log(err, ' Hubo un error!')
    else
       console.log('Suscripto!')
@@ -61,7 +61,7 @@ const server = http.createServer(function (req, res) {
         res.end(JSON.stringify(respuesta))
       })
       .catch((error) => {
-        console.log(typeof error);
+        // console.log(typeof error);
         console.log("Error " + error.status)
         res.statusCode = error.status
         res.end('Error ' + error.status)
@@ -146,10 +146,10 @@ function send_request({ data, url, method } = {}) {
         });
 
         response.on('end', () => {
-          console.log("Gateway request del mock " + body)
-          body = JSON.parse(body);
-          //estado = stringify(statusCode)
-          // console.log("el selector recibe un codigo de " +response.statusCode)
+          console.log("el selector recibe un codigo de " +response.statusCode)
+          console.log("Gateway recibe del mock " + body)
+          if (response.statusCode == 200)
+            body = JSON.parse(body)
           resolve({ "body": body, "statusCode": response.statusCode })
         });
       });
@@ -166,6 +166,6 @@ class Error_request extends Error {
   constructor(status) {
     super(`Error en la solicitud con código de estado: ${status}`);
     this.status = status;
-    console.log('creado error con status' + this.status);
+    // console.log('creado error con status' + this.status);
   }
 }

@@ -34,7 +34,7 @@ const server = http.createServer(function (request, response) {
         response.end(JSON.stringify(respuesta))
       })
       .catch((error) => {
-        console.log("Error " + error.status)
+        // console.log("entra aca " + error.status)
         response.statusCode = error.status
         response.end('Error')
       })
@@ -51,7 +51,6 @@ const server = http.createServer(function (request, response) {
         let status = respPermisos[1]
         // console.log('selector manda la data bien ' + respuesta)
         // console.log('status ' + status)
-        console.log(validar_permisos(request_data, respuesta))
         if (validar_permisos(request_data, respuesta)) {
           // console.log("Valida permiso")
           solicitar_ascensor(request_data)
@@ -66,7 +65,7 @@ const server = http.createServer(function (request, response) {
             })
         }
         else{
-          console.log("Entro acaaaaaa");
+          // console.log("Entro acaaaaaa");
           response.statusCode = 400
           response.end('{}')
         }
@@ -80,10 +79,10 @@ const server = http.createServer(function (request, response) {
 })
 
 function validar_permisos(request, datos) {
-  console.log('VALIDANDO PERMISOS')
+  // console.log('VALIDANDO PERMISOS')
   let res = false;
-  console.log('los pisos de respuesta '+ datos.pisos + ' '+typeof(datos.pisos[0]));
-   console.log('el piso solicitado es '+ request.piso+ ' '+typeof(request.piso));
+  // console.log('los pisos de respuesta '+ datos.pisos + ' '+typeof(datos.pisos[0]));
+  //  console.log('el piso solicitado es '+ request.piso+ ' '+typeof(request.piso));
    let piso = Number(request.piso)
   //verifica que el piso solicitado este en los autorizados
   if (datos.pisos.includes(piso)) {
@@ -118,7 +117,7 @@ async function solicita_permisos(request_data) {
 async function solicita_datos(request_data) {
   //solicita a el gestor de permisos la informacion del visitante
   let url = URL_PERMISOS + '/visitantes/' + request_data.id + '/info'
-  console.log(url);
+  // console.log(url);
   let respInfo = await send_request({ url: url, method: 'GET' });
   let datos = respInfo.body
   // console.log("datos recibe un codigo de " + respInfo.statusCode);
@@ -127,8 +126,8 @@ async function solicita_datos(request_data) {
   url = URL_PERMISOS + '/visitantes/' + request_data.id + '/permisos'
   const respPermisos = await send_request({ url: url, method: 'GET' });
   let permisos = respPermisos.body
-  console.log("permisos obtenidos " + permisos)
-  console.log("permisos recibe un codigo de " + respPermisos.statusCode);
+  // console.log("permisos obtenidos " + permisos)
+  // console.log("permisos recibe un codigo de " + respPermisos.statusCode);
 
   if (respPermisos.statusCode == 200 && respInfo.statusCode == 200) {
     datos.pisos = permisos.pisos
@@ -193,7 +192,7 @@ async function solicitar_ascensor(request_data) {
 
 class Error_request extends Error {
   constructor(status) {
-    super(mensaje);
+    super(status);
     this.status = status;
   }
 } 
