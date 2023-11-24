@@ -72,6 +72,8 @@ const server = http.createServer(function (req, res) {
 
     client.on("message", (topic, message) => {
       console.log(message.toString())
+      const recibido = message.toJSON()
+      
       const msg = { id: message.toString() }
       // res.statusCode = 200
       // res.end(JSON.stringify(msg))

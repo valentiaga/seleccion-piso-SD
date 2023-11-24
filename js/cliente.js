@@ -30,35 +30,36 @@ function init() {
   escucha_gw()
 }
 
-async function escucha_gw(){
-  let url = `http://localhost:${puerto_gateway}/conectar`
-    console.log('conectando con gw')
-    fetch(url,
-      {
-        method: 'GET'
+async function escucha_gw() {
+  let url = `http://192.168.0.55:${puerto_gateway}/conectar`
+  console.log('conectando con gw')
+  fetch(url,
+    {
+      method: 'GET'
+    }
+  )
+    .then((response) => {
+      if (response.ok) {
+        return response.json()
+      } else {
+        throw new Error('Error en la solicitud')
       }
-      )
-      .then((response) => {
-        if (response.ok) {
-          return response.json()
-        } else {
-          throw new Error('Error en la solicitud')
-        }
-      })
-      .then(data => {
-        muestraDatos(data)
-        escucha_gw()
-      })
-      .catch(error => {
-        console.error('Error:', error)
-      })
+    })
+    .then(data => {
+      muestraDatos(data)
+      escucha_gw()
+    })
+    .catch(error => {
+      console.error('Error:', error)
+    })
 }
 function solicitud_acceso() {
   pisoElegido = document.querySelector('.inputSeleccion').value
-  if (id == -1)
-    id = document.getElementById('input_id').value
+  id = document.getElementById('input_id').value
+  console.log(id);
+  document.getElementById('input_id').value = ""
 
-  if (id == '') {
+  if (id == "") {
     // document.body.style.overflow = 'hidden' 
     alerta("Ingrese ID")
     return
@@ -70,7 +71,7 @@ function solicitud_acceso() {
     return
   }
 
-  const url = `http://localhost:${puerto_gateway}/visitantes/` + id + '/' + pisoElegido + '/ascensor'
+  const url = `http://192.168.0.55:${puerto_gateway}/visitantes/` + id + '/' + pisoElegido + '/ascensor'
 
   console.log('URL:', url)
   fetch(url,
@@ -80,28 +81,30 @@ function solicitud_acceso() {
       //   'Content-Type': 'application/json'
       // }
     })
-  .then((response) => {
-    console.log(response.ok);
-    if (!response.ok) {
-      throw new Error(`${response.status}`)
-    }
-    else {
-      return response.json()
-    }
+    .then((response) => {
+      console.log(response.ok);
+      if (!response.ok) {
+        throw new Error(`${response.status}`)
+      }
+      else {
+        return response.json()
+      }
     })
-  .then(data => {
-    if (data !== null) {
-      console.log('Respuesta del servidor:', data)
-      alerta("Dirijase al ascensor: " + data.nombre)
-    }
-  })
-  .catch((error) => {
-    console.log('Error capturado en catch:'+ error.message);
-    if (error.message == '400') {
-      alerta("Acceso denegado")
-    }else
-      alerta("No es posible ejecutar su solicitud. Reintente mas tarde")
-  })
+    .then(data => {
+      if (data !== null) {
+        console.log('Respuesta del servidor:', data)
+        alerta("Dirijase al ascensor: " + data.nombre)
+      }
+    })
+    .catch((error) => {
+      console.log('Error capturado en catch:' + error.message);
+      if (error.message == '400') {
+        alerta("Acceso denegado")
+      } else
+        alerta("No es posible ejecutar su solicitud. Reintente mas tarde")
+    })
+    volverAAutenticacion()
+    reseteo()
 }
 
 function alerta(text) {
@@ -114,6 +117,7 @@ function alerta(text) {
 }
 
 function consulta_datos() {
+
   id = document.getElementById('input_id').value
 
   if (id == '') {
@@ -122,7 +126,7 @@ function consulta_datos() {
     return
   }
 
-  const url = `http://localhost:${puerto_gateway}/visitantes/` + id + '/info'
+  const url = `http://192.168.0.55:${puerto_gateway}/visitantes/` + id + '/info'
   fetch(url)
     .then(response => {
       if (response.ok) {
@@ -135,7 +139,7 @@ function consulta_datos() {
     .then(data => {
       muestraDatos(data)
     })
-    .catch(error=> {
+    .catch(error => {
       if (error.status == 400)
         alerta("ID Invalido")
       else
@@ -143,11 +147,11 @@ function consulta_datos() {
     })
 }
 
-function muestraDatos(data){
+function muestraDatos(data) {
   id = data.id
   var authenticationContainer = document.querySelector('.authentication-container');
 
-      var nuevoContenido = `
+  var nuevoContenido = `
         <div id="datos-visitante">
         <h1>Datos Visitante</h1>
         <p><strong>ID:</strong> ${data.id}</p>
@@ -156,35 +160,37 @@ function muestraDatos(data){
         <p><strong>Email:</strong> ${data.email}</p>
         <p><strong>Pisos Permitidos:</strong> ${data.pisos}</p>
         <button id="btn_volver">Volver</button>
+        <input type="id" id="input_id" placeholder="Id" style="display: none;" value = ${document.getElementById('input_id').value}" />
+
         </div>
       `;
-      authenticationContainer.innerHTML = nuevoContenido
+  authenticationContainer.innerHTML = nuevoContenido
 
-      document.getElementById("btn_volver").style.display = "block";
-      var btnVolver = document.getElementById("btn_volver");
-      btnVolver.onclick = volverAAutenticacion;
+  document.getElementById("btn_volver").style.display = "block";
+  var btnVolver = document.getElementById("btn_volver");
+  btnVolver.onclick = volverAAutenticacion;
 
-      function volverAAutenticacion() {
+}
 
-        var authenticationContainer = document.querySelector('.authentication-container');
+function volverAAutenticacion() {
+  var authenticationContainer = document.querySelector('.authentication-container');
 
-        var contenidoOriginal = `
-            <form action="#">
-                <h1>Autenticación</h1>
-                <span>Ingrese id o apoye tarjeta de identificación</span>
-                <input type="id" id="input_id" placeholder="Id" />
-                <button id="btn_consultarDatos">Datos</button>
-                <br>
-                <img class="logoRFID" src="./img/rfid.png" alt="">
-            </form>
-        `;
+  var contenidoOriginal = `
+      <form action="#">
+          <h1>Autenticación</h1>
+          <span>Ingrese id o apoye tarjeta de identificación</span>
+          <input type="id" id="input_id" placeholder="Id" />
+          <button id="btn_consultarDatos">Datos</button>
+          <br>
+          <img class="logoRFID" src="./img/rfid.png" alt="">
+      </form>
+  `;
 
-        authenticationContainer.innerHTML = contenidoOriginal;
+  authenticationContainer.innerHTML = contenidoOriginal;
 
-        //Arreglar esto
-        btn_consultarDatos = document.getElementById('btn_consultarDatos')
-        btn_consultarDatos.addEventListener('click', consulta_datos)
-      }
+  //Arreglar esto
+  btn_consultarDatos = document.getElementById('btn_consultarDatos')
+  btn_consultarDatos.addEventListener('click', consulta_datos)
 }
 
 class Error_request extends Error {
