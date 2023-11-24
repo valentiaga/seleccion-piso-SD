@@ -133,7 +133,7 @@ async function solicita_ascensor(request_data) {
   let datos = respInfo.body
   // console.log("Acceder recibe" + respInfo.statusCode)
   let status = respInfo.statusCode
-  // console.log("Acceder recibe: " + JSON.stringify(datos))
+  console.log("Acceder recibe: " + JSON.stringify(datos))
   return [datos, status];
 }
 

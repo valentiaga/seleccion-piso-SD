@@ -159,7 +159,7 @@ function muestraDatos(data) {
         <p><strong>Nombre:</strong> ${data.nombre}</p>
         <p><strong>Edad:</strong> ${data.edad}</p>
         <p><strong>Email:</strong> ${data.email}</p>
-        <p><strong>Pisos Permitidos:</strong> ${data.pisos}</p>
+        <p><strong>Pisos Permitidos:</strong> ${data.pisos_permitidos}</p>
         <button id="btn_volver">Volver</button>
         <input type="id" id="input_id" placeholder="Id" style="display: none;" value = ${document.getElementById('input_id').value} />
 
