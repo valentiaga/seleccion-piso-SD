@@ -71,8 +71,9 @@ const server = http.createServer(function (req, res) {
     console.log("Cliente se conecta con GW")
 
     client.on("message", (topic, message) => {
-      console.log(message.toString())
       const recibido = message.toJSON()
+      console.log(recibido)
+      // let mensaje_broker = JSON.parse(recibido)
       
       const msg = { id: message.toString() }
       // res.statusCode = 200
