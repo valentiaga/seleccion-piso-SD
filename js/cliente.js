@@ -160,7 +160,7 @@ function muestraDatos(data) {
         <p><strong>Email:</strong> ${data.email}</p>
         <p><strong>Pisos Permitidos:</strong> ${data.pisos}</p>
         <button id="btn_volver">Volver</button>
-        <input type="id" id="input_id" placeholder="Id" style="display: none;" value = ${document.getElementById('input_id').value}" />
+        <input type="id" id="input_id" placeholder="Id" style="display: none;" value = ${document.getElementById('input_id').value} />
 
         </div>
       `;
@@ -179,7 +179,7 @@ function volverAAutenticacion() {
       <form action="#">
           <h1>Autenticación</h1>
           <span>Ingrese id o apoye tarjeta de identificación</span>
-          <input type="id" id="input_id" placeholder="Id" />
+          <input type="id" id="input_id" placeholder="Id" value = '${document.getElementById('input_id').value}' />
           <button id="btn_consultarDatos">Datos</button>
           <br>
           <img class="logoRFID" src="./img/rfid.png" alt="">
