@@ -1,5 +1,6 @@
 let pisoElegido = -1
 let id = -1
+const puerto_gateway = 3000
 
 function reseteo() {
   // Colocar un 0 inicial en la pantalla
@@ -30,7 +31,7 @@ function init() {
 }
 
 async function escucha_gw(){
-  let url = 'http://localhost:3000/conectar'
+  let url = `http://localhost:${puerto_selector}/conectar`
     console.log('conectando con gw')
     fetch(url,
       {
@@ -69,7 +70,7 @@ function solicitud_acceso() {
     return
   }
 
-  const url = 'http://localhost:3000/visitantes/' + id + '/' + pisoElegido + '/ascensor'
+  const url = `http://localhost:${puerto_gateway}/visitantes/` + id + '/' + pisoElegido + '/ascensor'
 
   console.log('URL:', url)
   fetch(url,
@@ -122,7 +123,7 @@ function consulta_datos() {
     return
   }
 
-  const url = 'http://localhost:3000/visitantes/' + id + '/info'
+  const url = `http://localhost:${puerto_gateway}/visitantes/` + id + '/info'
   fetch(url)
     .then(response => {
       if (response.ok) {
