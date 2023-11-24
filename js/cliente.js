@@ -31,7 +31,7 @@ function init() {
 }
 
 async function escucha_gw() {
-  let url = `http://192.168.0.55:${puerto_gateway}/conectar`
+  let url = `http://10.2.210.253:${puerto_gateway}/conectar`
   console.log('conectando con gw')
   fetch(url,
     {
@@ -46,6 +46,7 @@ async function escucha_gw() {
       }
     })
     .then(data => {
+      document.getElementById('input_id').value = data.id
       muestraDatos(data)
       escucha_gw()
     })
@@ -71,7 +72,7 @@ function solicitud_acceso() {
     return
   }
 
-  const url = `http://192.168.0.55:${puerto_gateway}/visitantes/` + id + '/' + pisoElegido + '/ascensor'
+  const url = `http://10.2.210.253:${puerto_gateway}/visitantes/` + id + '/' + pisoElegido + '/ascensor'
 
   console.log('URL:', url)
   fetch(url,
@@ -126,7 +127,7 @@ function consulta_datos() {
     return
   }
 
-  const url = `http://192.168.0.55:${puerto_gateway}/visitantes/` + id + '/info'
+  const url = `http://10.2.210.253:${puerto_gateway}/visitantes/` + id + '/info'
   fetch(url)
     .then(response => {
       if (response.ok) {

@@ -47,7 +47,7 @@ const server = http.createServer(function (request, response) {
   if (request.method=='GET' && parsedUrl.at(-1) === 'info') {
     console.log("permisos recibe " + parsedUrl[1]);
     let mock = {
-        "id": "A001",
+        "id": parsedUrl[1],
         "nombre": "Juan Pérez",
         "edad": 25,
         "email": "juan.perez@example.com"

@@ -71,11 +71,12 @@ const server = http.createServer(function (req, res) {
     console.log("Cliente se conecta con GW")
 
     client.on("message", (topic, message) => {
-      const recibido = message.toJSON()
-      console.log(recibido)
-      // let mensaje_broker = JSON.parse(recibido)
+      console.log("Recibimos del broker" + message.toString())
+      const rfid_json = hex_to_ascii(message.toString())
+      console.log(rfid_json)
+      let objeto = JSON.parse(rfid_json)
       
-      const msg = { id: message.toString() }
+      const msg = { id: objeto[0].owner_id }
       // res.statusCode = 200
       // res.end(JSON.stringify(msg))
 
@@ -172,3 +173,13 @@ class Error_request extends Error {
     // console.log('creado error con status' + this.status);
   }
 }
+
+function hex_to_ascii(str1)
+ {
+	var hex  = str1.toString();
+	var str = '';
+	for (var n = 0; n < hex.length; n += 2) {
+		str += String.fromCharCode(parseInt(hex.substr(n, 2), 16));
+	}
+	return str;
+ }
